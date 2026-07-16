@@ -21,7 +21,6 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- Navigation Bar -->
     <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
         <div class="flex items-center gap-3">
             <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
@@ -40,16 +39,13 @@
         </div>
     </nav>
 
-    <!-- Tech Portal Main -->
     <main class="container mx-auto px-6 py-12 max-w-2xl space-y-8">
         <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 space-y-2">
             <h1 class="text-2xl font-black">قائمة المهام اليومية 📋</h1>
             <p class="text-xs text-slate-400">يرجى متابعة الطلبات المسندة إليك وتحديث الحالة لتبلغ العميل والإدارة فوراً.</p>
         </div>
 
-        <!-- Task List -->
         <div class="space-y-6">
-            <!-- Active Task -->
             <div class="glass p-6 rounded-2xl border-2 border-amber-500/50 space-y-4">
                 <div class="flex justify-between items-center">
                     <span class="bg-amber-500 text-slate-950 font-bold text-[10px] px-2.5 py-1 rounded-full">نشط وقيد التنفيذ</span>
@@ -65,7 +61,26 @@
                     <p>• <strong>نوع العطل:</strong> المكيف لا يبرد ويصدر صوتاً مرتفعاً</p>
                 </div>
 
-                <div class="grid grid-cols-3 gap-2 pt-4">
+                <div class="border border-slate-800 bg-slate-950/40 p-4 rounded-xl space-y-2">
+                    <p class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                        📷 صورة العطل المرفقة:
+                    </p>
+                    
+                    <div id="tech-image-container" class="hidden space-y-2">
+                        <div class="relative overflow-hidden rounded-lg border border-slate-800 bg-slate-900">
+                            <img id="tech-customer-image" src="" alt="صورة العطل المرفوعة من العميل" class="w-full max-h-60 object-cover">
+                        </div>
+                        <a id="tech-image-link" href="#" target="_blank" class="block text-center text-xs text-amber-500 hover:text-amber-400 hover:underline">
+                            🔍 فتح الصورة بحجمها الكامل في نافذة جديدة
+                        </a>
+                    </div>
+
+                    <p id="tech-no-image" class="text-xs text-slate-500 italic py-1">
+                        لم يقم العميل بإرفاق أي صورة لهذا الطلب.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 pt-2">
                     <a href="https://wa.me/9647701234567" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-100 py-2.5 text-xs font-bold rounded-xl text-center">💬 واتساب العميل</a>
                     <a href="tel:9647701234567" class="bg-slate-800 hover:bg-slate-700 text-slate-100 py-2.5 text-xs font-bold rounded-xl text-center">📞 اتصال هاتفي</a>
                     <a href="https://maps.google.com/?q=33.3128,44.3615" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-amber-400 py-2.5 text-xs font-bold rounded-xl text-center">📍 فتح الموقع GPS</a>
@@ -73,7 +88,6 @@
 
                 <hr class="border-slate-800">
 
-                <!-- Tracking Status controls -->
                 <div class="space-y-3">
                     <p class="text-xs font-bold text-slate-300">تحديث حالة المهمة للعميل والإدارة:</p>
                     <div class="grid grid-cols-3 gap-2">
@@ -87,8 +101,24 @@
         </div>
     </main>
 
-    <!-- Script for tech simulation -->
     <script>
+        // كود جلب الصورة المرفوعة بمجرد تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedImageUrl = localStorage.getItem('savedImageUrl');
+            const imageContainer = document.getElementById('tech-image-container');
+            const customerImage = document.getElementById('tech-customer-image');
+            const imageLink = document.getElementById('tech-image-link');
+            const noImageMsg = document.getElementById('tech-no-image');
+
+            if (savedImageUrl) {
+                customerImage.src = savedImageUrl;
+                imageLink.href = savedImageUrl;
+                
+                imageContainer.classList.remove('hidden'); // إظهار الصورة
+                noImageMsg.classList.add('hidden'); // إخفاء نص "لا توجد صورة"
+            }
+        });
+
         function updateStatus(state) {
             const btnWay = document.getElementById('btn-way');
             const btnArrive = document.getElementById('btn-arrive');
@@ -116,7 +146,6 @@
         }
     </script>
 
-    <!-- Footer -->
     <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12">
         <div class="text-center text-xs text-slate-600">
             جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.

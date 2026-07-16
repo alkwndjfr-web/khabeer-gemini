@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الفني | خبير</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Navigation Bar -->
+    <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
+            <span class="text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold">بوابة الفني 🔧</span>
+        </div>
+        <div class="hidden md:flex gap-6 items-center text-sm font-medium">
+            <a href="index.html" class="hover:text-amber-400 transition">الرئيسية</a>
+            <a href="pricing.html" class="hover:text-amber-400 transition">الباقات والاشتراكات</a>
+            <a href="request.html" class="hover:text-amber-400 transition">طلب خدمة</a>
+            <a href="dashboard.html" class="hover:text-amber-400 transition">لوحة العميل</a>
+            <a href="tech.html" class="text-amber-400 hover:text-amber-300 transition">لوحة الفني</a>
+            <a href="admin.html" class="hover:text-amber-400 transition">لوحة الإدارة</a>
+        </div>
+        <div>
+            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-3 py-1.5 rounded-lg text-xs">أحمد الكهربائي (متصل)</span>
+        </div>
+    </nav>
+
+    <!-- Tech Portal Main -->
+    <main class="container mx-auto px-6 py-12 max-w-2xl space-y-8">
+        <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 space-y-2">
+            <h1 class="text-2xl font-black">قائمة المهام اليومية 📋</h1>
+            <p class="text-xs text-slate-400">يرجى متابعة الطلبات المسندة إليك وتحديث الحالة لتبلغ العميل والإدارة فوراً.</p>
+        </div>
+
+        <!-- Task List -->
+        <div class="space-y-6">
+            <!-- Active Task -->
+            <div class="glass p-6 rounded-2xl border-2 border-amber-500/50 space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="bg-amber-500 text-slate-950 font-bold text-[10px] px-2.5 py-1 rounded-full">نشط وقيد التنفيذ</span>
+                    <span class="text-xs text-slate-400">رقم الطلب: #KH-4822</span>
+                </div>
+                
+                <hr class="border-slate-800">
+
+                <div class="space-y-2 text-sm">
+                    <p>• <strong>العميل:</strong> أبو مصطفى</p>
+                    <p>• <strong>رقم الموبايل:</strong> 9647701234567</p>
+                    <p>• <strong>العنوان:</strong> المنصور، شارع الرواد، خلف صيدلية بغداد</p>
+                    <p>• <strong>نوع العطل:</strong> المكيف لا يبرد ويصدر صوتاً مرتفعاً</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 pt-4">
+                    <a href="https://wa.me/9647701234567" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-100 py-2.5 text-xs font-bold rounded-xl text-center">💬 واتساب العميل</a>
+                    <a href="tel:9647701234567" class="bg-slate-800 hover:bg-slate-700 text-slate-100 py-2.5 text-xs font-bold rounded-xl text-center">📞 اتصال هاتفي</a>
+                    <a href="https://maps.google.com/?q=33.3128,44.3615" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-amber-400 py-2.5 text-xs font-bold rounded-xl text-center">📍 فتح الموقع GPS</a>
+                </div>
+
+                <hr class="border-slate-800">
+
+                <!-- Tracking Status controls -->
+                <div class="space-y-3">
+                    <p class="text-xs font-bold text-slate-300">تحديث حالة المهمة للعميل والإدارة:</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="updateStatus('on_the_way')" id="btn-way" class="bg-amber-500 text-slate-950 text-xs font-bold py-3 rounded-xl transition">أنا في الطريق 🚗</button>
+                        <button onclick="updateStatus('arrived')" id="btn-arrive" class="bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-bold py-3 rounded-xl transition">وصلت للموقع 📍</button>
+                        <button onclick="updateStatus('completed')" id="btn-done" class="bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-bold py-3 rounded-xl transition">اكتمل العمل ✓</button>
+                    </div>
+                    <p id="status-msg" class="text-xs text-center text-amber-400 font-bold mt-2">الحالة الحالية: تم إبلاغ العميل أنك في الطريق.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script for tech simulation -->
+    <script>
+        function updateStatus(state) {
+            const btnWay = document.getElementById('btn-way');
+            const btnArrive = document.getElementById('btn-arrive');
+            const btnDone = document.getElementById('btn-done');
+            const msg = document.getElementById('status-msg');
+
+            // Reset classes
+            [btnWay, btnArrive, btnDone].forEach(btn => {
+                btn.className = "bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-bold py-3 rounded-xl transition";
+            });
+
+            if(state === 'on_the_way') {
+                btnWay.className = "bg-amber-500 text-slate-950 text-xs font-bold py-3 rounded-xl transition";
+                msg.innerText = "الحالة الحالية: تم إبلاغ العميل أنك في الطريق وعرض موقعك GPS لهم.";
+                msg.className = "text-xs text-center text-amber-400 font-bold mt-2";
+            } else if(state === 'arrived') {
+                btnArrive.className = "bg-emerald-500 text-slate-950 text-xs font-bold py-3 rounded-xl transition";
+                msg.innerText = "الحالة الحالية: وصلت لعنوان العميل، جاري المباشرة بالعمل.";
+                msg.className = "text-xs text-center text-emerald-400 font-bold mt-2";
+            } else if(state === 'completed') {
+                btnDone.className = "bg-blue-600 text-white text-xs font-bold py-3 rounded-xl transition";
+                msg.innerText = "الحالة الحالية: اكتمل العمل بنجاح! تم إرسال التقرير النهائي للإدارة للفوترة.";
+                msg.className = "text-xs text-center text-blue-400 font-bold mt-2";
+            }
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12">
+        <div class="text-center text-xs text-slate-600">
+            جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.
+        </div>
+    </footer>
+</body>
+</html>

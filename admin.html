@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الإدارة والمراقبة | خبير</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Navigation Bar -->
+    <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
+            <span class="text-xs bg-red-500/20 text-red-400 px-2.5 py-1 rounded-full font-bold">لوحة الإدارة السرية 🔐</span>
+        </div>
+        <div class="hidden md:flex gap-6 items-center text-sm font-medium">
+            <a href="index.html" class="hover:text-amber-400 transition">الرئيسية</a>
+            <a href="pricing.html" class="hover:text-amber-400 transition">الباقات والاشتراكات</a>
+            <a href="request.html" class="hover:text-amber-400 transition">طلب خدمة</a>
+            <a href="dashboard.html" class="hover:text-amber-400 transition">لوحة العميل</a>
+            <a href="tech.html" class="hover:text-amber-400 transition">لوحة الفني</a>
+            <a href="admin.html" class="text-amber-400 hover:text-amber-300 transition">لوحة الإدارة</a>
+        </div>
+        <div>
+            <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg">المدير العام: علي الصدر</span>
+        </div>
+    </nav>
+
+    <!-- Admin Body -->
+    <main class="container mx-auto px-6 py-12 space-y-8">
+        <!-- Overview Banner -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass p-5 rounded-2xl border border-slate-800">
+                <span class="text-xs text-slate-400">الاشتراكات الفعالة</span>
+                <p class="text-2xl font-black text-amber-500 mt-1">1,248 بيت</p>
+            </div>
+            <div class="glass p-5 rounded-2xl border border-slate-800">
+                <span class="text-xs text-slate-400">طلبات الصيانة اليوم</span>
+                <p class="text-2xl font-black text-amber-500 mt-1">14 طلب نشط</p>
+            </div>
+            <div class="glass p-5 rounded-2xl border border-slate-800">
+                <span class="text-xs text-slate-400">الفنيين المتاحين</span>
+                <p class="text-2xl font-black text-emerald-400 mt-1">8 متصل / 2 مشغول</p>
+            </div>
+            <div class="glass p-5 rounded-2xl border border-slate-800">
+                <span class="text-xs text-slate-400">رضا العملاء الكلي</span>
+                <p class="text-2xl font-black text-blue-400 mt-1">98.4% ✓</p>
+            </div>
+        </div>
+
+        <!-- Requests and Assign Panel -->
+        <div class="glass rounded-2xl border border-slate-800 overflow-hidden">
+            <div class="px-6 py-4 bg-slate-900/50 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-slate-100">إدارة طلبات الصيانة العاجلة</h3>
+                <span class="text-xs bg-amber-500/15 text-amber-400 px-2.5 py-1 rounded-full font-bold">تحديث فوري تلقائي</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-sm">
+                    <thead class="bg-slate-950 text-slate-400 text-xs uppercase">
+                        <tr>
+                            <th class="px-6 py-3">العميل والمنطقة</th>
+                            <th class="px-6 py-3">نوع العطل</th>
+                            <th class="px-6 py-3">الموقع والـ GPS</th>
+                            <th class="px-6 py-3">إسناد الطلب للفني</th>
+                            <th class="px-6 py-3">الحالة الحالية</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800 text-slate-300">
+                        <tr>
+                            <td class="px-6 py-4 font-bold">أبو مصطفى (المنصور)</td>
+                            <td class="px-6 py-4">تسريب مكيف الصالة (سبلت)</td>
+                            <td class="px-6 py-4"><a href="https://maps.google.com/?q=33.3128,44.3615" target="_blank" class="text-amber-500 hover:underline font-bold">📍 خرائط جوجل</a></td>
+                            <td class="px-6 py-4">
+                                <select class="bg-slate-900 border border-slate-700 text-xs rounded p-1" onchange="alert('تم إرسال إشعار التكليف للفني!')">
+                                    <option>أحمد الكهربائي (مشغول)</option>
+                                    <option>علي السباك</option>
+                                    <option>مصطفى فني التكييف</option>
+                                </select>
+                            </td>
+                            <td class="px-6 py-4"><span class="bg-amber-500/10 text-amber-400 text-xs px-2.5 py-1 rounded font-bold">في الطريق للعميل</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-bold">أم حسين (الكرادة)</td>
+                            <td class="px-6 py-4">عطل بورد المطبخ الكهربائي الرئيسي</td>
+                            <td class="px-6 py-4"><a href="https://maps.google.com/?q=33.3011,44.4231" target="_blank" class="text-amber-500 hover:underline font-bold">📍 خرائط جوجل</a></td>
+                            <td class="px-6 py-4">
+                                <select class="bg-slate-900 border border-slate-700 text-xs rounded p-1" onchange="alert('تم إرسال إشعار التكليف للفني!')">
+                                    <option>أحمد الكهربائي (مشغول)</option>
+                                    <option selected>علي السباك</option>
+                                    <option>مصطفى فني التكييف</option>
+                                </select>
+                            </td>
+                            <td class="px-6 py-4"><span class="bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded font-bold">تم وصول الفني</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tech Tracking and Subscriptions List -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="glass p-6 rounded-2xl border border-slate-800 space-y-4">
+                <h3 class="font-bold text-slate-100">مراقبة الفنيين وتتبع مواقعهم مباشر</h3>
+                <ul class="space-y-3">
+                    <li class="flex justify-between items-center text-sm p-3 bg-slate-950/50 rounded-xl border border-slate-800">
+                        <span class="font-bold">أحمد الكهربائي (المنصور)</span>
+                        <span class="text-xs text-slate-400">باقي: 12 دقيقة للوصول للعميل</span>
+                    </li>
+                    <li class="flex justify-between items-center text-sm p-3 bg-slate-950/50 rounded-xl border border-slate-800">
+                        <span class="font-bold">علي السباك (الكرادة)</span>
+                        <span class="text-xs text-emerald-400">وصل لموقع العميل بنجاح</span>
+                    </li>
+                    <li class="flex justify-between items-center text-sm p-3 bg-slate-950/50 rounded-xl border border-slate-800">
+                        <span class="font-bold">مصطفى التكييف (اليرموك)</span>
+                        <span class="text-xs text-indigo-400">متاح وبانتظار أمر الإسناد</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="glass p-6 rounded-2xl border border-slate-800 space-y-4">
+                <h3 class="font-bold text-slate-100">أحدث عمليات الاشتراك</h3>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <div>
+                            <p class="font-bold">حيدر الساعدي (زيونة)</p>
+                            <p class="text-xs text-slate-500">باقة خبير بلس السنوية</p>
+                        </div>
+                        <span class="text-emerald-400 font-bold">+439,000 د.ع</span>
+                    </li>
+                    <li class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <div>
+                            <p class="font-bold">هدى التميمي (العامرية)</p>
+                            <p class="text-xs text-slate-500">باقة خبير لايت الشهرية</p>
+                        </div>
+                        <span class="text-emerald-400 font-bold">+29,000 د.ع</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12">
+        <div class="text-center text-xs text-slate-600">
+            جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.
+        </div>
+    </footer>
+</body>
+</html>

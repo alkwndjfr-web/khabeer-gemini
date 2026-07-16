@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب خدمة صيانة | خبير</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Navigation Bar -->
+    <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
+            <span class="text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold">بغداد 🇮🇶</span>
+        </div>
+        <div class="hidden md:flex gap-6 items-center text-sm font-medium">
+            <a href="index.html" class="hover:text-amber-400 transition">الرئيسية</a>
+            <a href="pricing.html" class="hover:text-amber-400 transition">الباقات والاشتراكات</a>
+            <a href="request.html" class="text-amber-400 hover:text-amber-300 transition">طلب خدمة</a>
+            <a href="dashboard.html" class="hover:text-amber-400 transition">لوحة العميل</a>
+            <a href="tech.html" class="hover:text-amber-400 transition">لوحة الفني</a>
+            <a href="admin.html" class="hover:text-amber-400 transition">لوحة الإدارة</a>
+        </div>
+        <div>
+            <a href="pricing.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2 rounded-lg text-sm transition shadow-lg shadow-amber-500/20">اشترك الآن</a>
+        </div>
+    </nav>
+
+    <!-- Form Container -->
+    <main class="container mx-auto px-6 py-16 max-w-xl">
+        <div class="glass p-8 rounded-2xl border border-slate-800 space-y-6">
+            <div class="text-center space-y-2">
+                <h1 class="text-2xl font-black text-slate-100">طلب فني صيانة عاجل 🔧</h1>
+                <p class="text-xs text-slate-400">املأ الحقول لمشاركة طلبك وتلقائياً سنقوم بربطه بالواتساب لإرساله للإدارة.</p>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-300 mb-2">نوع الخدمة المطلوبة</label>
+                    <select id="service-type" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:border-amber-500 focus:outline-none">
+                        <option value="كهرباء">⚡ أعمال الكهرباء والإنارة</option>
+                        <option value="سباكة">🚰 السباكة والمياه</option>
+                        <option value="تكييف">❄️ التكييف والتبريد</option>
+                        <option value="نجارة">🪚 النجارة والألمنيوم</option>
+                        <option value="أجهزة منزلية">📺 صيانة الأجهزة المنزلية</option>
+                        <option value="وقاية">🛡️ وقاية موسمية</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-300 mb-2">وصف المشكلة بالتفصيل</label>
+                    <textarea id="problem-desc" rows="4" placeholder="يرجى كتابة ما تواجهه في المنزل (مثلاً: المكيف لا يبرد أو تسريب في حنفية المطبخ)..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:border-amber-500 focus:outline-none"></textarea>
+                </div>
+
+                <!-- GPS Location Integration -->
+                <div>
+                    <label class="block text-sm font-bold text-slate-300 mb-2">موقع المنزل الجغرافي (نظام التتبع المباشر)</label>
+                    <button type="button" onclick="getLocation()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 text-sm font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 border border-slate-700">
+                        📍 <span>اضغط هنا لتحديد موقعك الحالي GPS تلقائياً</span>
+                    </button>
+                    <p id="gps-status" class="text-xs text-slate-500 mt-2 text-center">أو سيتم استخدام العنوان اليدوي في الأسفل.</p>
+                    <input type="hidden" id="gps-coords" value="">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-300 mb-2">العنوان اليدوي بالتفصيل</label>
+                    <input type="text" id="manual-address" placeholder="مثال: المنصور، شارع الرواد، قرب مطعم..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:border-amber-500 focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Redirection trigger -->
+            <button onclick="sendRequest()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-lg font-bold py-4 rounded-xl transition shadow-lg shadow-amber-500/20">
+                إرسال الطلب للإدارة وتأكيد الفني 🚀
+            </button>
+        </div>
+    </main>
+
+    <!-- Script for GPS sharing and Whatsapp formatting -->
+    <script>
+        const phone = "9647715480994";
+
+        function getLocation() {
+            const status = document.getElementById('gps-status');
+            const coords = document.getElementById('gps-coords');
+            
+            if (!navigator.geolocation) {
+                status.innerText = "متصفحك لا يدعم تتبع الموقع. يرجى كتابته يدوياً.";
+                status.className = "text-xs text-red-400 mt-2 text-center";
+                return;
+            }
+
+            status.innerText = "جاري الحصول على إحداثيات موقعك... ⏳";
+            status.className = "text-xs text-amber-400 mt-2 text-center";
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    coords.value = `https://www.google.com/maps?q=${lat},${lon}`;
+                    status.innerText = "✓ تم تحديد موقعك الجغرافي بنجاح وجاهز للإرسال!";
+                    status.className = "text-xs text-emerald-400 mt-2 text-center font-bold";
+                },
+                () => {
+                    status.innerText = "فشل تحديد الموقع تلقائياً. يرجى ملء العنوان اليدوي.";
+                    status.className = "text-xs text-red-400 mt-2 text-center";
+                }
+            );
+        }
+
+        function sendRequest() {
+            const service = document.getElementById('service-type').value;
+            const desc = document.getElementById('problem-desc').value;
+            const gps = document.getElementById('gps-coords').value || "لم يتم توفير موقع GPS";
+            const address = document.getElementById('manual-address').value;
+
+            if(!desc || !address) {
+                alert("يرجى وصف المشكلة وتحديد العنوان اليدوي أولاً لإرسال الطلب بنجاح.");
+                return;
+            }
+
+            const formattedMessage = encodeURIComponent(
+                `🔧 *طلب صيانة جديد - منصة خبير*\n` +
+                `────────────────────\n` +
+                `• *نوع الخدمة:* ${service}\n` +
+                `• *تفاصيل العطل:* ${desc}\n` +
+                `• *العنوان اليدوي:* ${address}\n` +
+                `• *رابط موقع GPS:* ${gps}\n` +
+                `────────────────────\n` +
+                `يرجى تأكيد إرسال الفني خلال 90 دقيقة.`
+            );
+
+            window.open(`https://wa.me/${phone}?text=${formattedMessage}`, '_blank');
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12">
+        <div class="text-center text-xs text-slate-600">
+            جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.
+        </div>
+    </footer>
+</body>
+</html>

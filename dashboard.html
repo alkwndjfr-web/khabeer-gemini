@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة العميل | خبير</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Navigation Bar -->
+    <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
+            <span class="text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold">بغداد 🇮🇶</span>
+        </div>
+        <div class="hidden md:flex gap-6 items-center text-sm font-medium">
+            <a href="index.html" class="hover:text-amber-400 transition">الرئيسية</a>
+            <a href="pricing.html" class="hover:text-amber-400 transition">الباقات والاشتراكات</a>
+            <a href="request.html" class="hover:text-amber-400 transition">طلب خدمة</a>
+            <a href="dashboard.html" class="text-amber-400 hover:text-amber-300 transition">لوحة العميل</a>
+            <a href="tech.html" class="hover:text-amber-400 transition">لوحة الفني</a>
+            <a href="admin.html" class="hover:text-amber-400 transition">لوحة الإدارة</a>
+        </div>
+        <div>
+            <a href="pricing.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2 rounded-lg text-sm transition shadow-lg shadow-amber-500/20">اشترك الآن</a>
+        </div>
+    </nav>
+
+    <!-- Dashboard Main -->
+    <main class="container mx-auto px-6 py-12 max-w-5xl space-y-8">
+        <!-- Dashboard Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+            <div>
+                <h1 class="text-2xl font-black">مرحباً أبو مصطفى 👋</h1>
+                <p class="text-slate-400 text-sm">أهلاً بك مجدداً في لوحتك الخاصة، صيانة منزلك مؤمنة بالكامل.</p>
+            </div>
+            <div class="flex gap-3">
+                <span class="bg-amber-500/10 text-amber-400 text-xs px-4 py-2 rounded-xl font-black border border-amber-500/20">باقة خبير بلس السنوية</span>
+                <span class="bg-emerald-500/10 text-emerald-400 text-xs px-4 py-2 rounded-xl font-black border border-emerald-500/20">صالح لغاية: 14/12/2026</span>
+            </div>
+        </div>
+
+        <!-- Metric Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Metric 1: Savings -->
+            <div class="glass p-6 rounded-2xl relative overflow-hidden border border-emerald-500/30">
+                <div class="absolute -right-4 -bottom-4 text-7xl opacity-10">💰</div>
+                <h4 class="text-xs text-slate-400 font-bold">التوفير المالي المحقق هذا العام</h4>
+                <p class="text-3xl font-black text-emerald-400 mt-2">185,000 د.ع</p>
+                <div class="w-full bg-slate-800 h-1.5 rounded-full mt-4">
+                    <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 75%"></div>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-2">مقارنة بمتوسط أسعار الفنيين الفرديين بالسوق</p>
+            </div>
+            <!-- Metric 2: Warranty -->
+            <div class="glass p-6 rounded-2xl relative overflow-hidden border border-amber-500/30">
+                <div class="absolute -right-4 -bottom-4 text-7xl opacity-10">🛡️</div>
+                <h4 class="text-xs text-slate-400 font-bold">الضمان النشط من الصيانة الأخيرة</h4>
+                <p class="text-3xl font-black text-amber-400 mt-2">14 يوم</p>
+                <div class="w-full bg-slate-800 h-1.5 rounded-full mt-4">
+                    <div class="bg-amber-500 h-1.5 rounded-full" style="width: 60%"></div>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-2">يشمل صيانة تكييف الصالة وغسل السبلت</p>
+            </div>
+            <!-- Metric 3: Next Visit -->
+            <div class="glass p-6 rounded-2xl relative overflow-hidden border border-indigo-500/30">
+                <div class="absolute -right-4 -bottom-4 text-7xl opacity-10">📅</div>
+                <h4 class="text-xs text-slate-400 font-bold">الزيارة الوقائية والموسمية القادمة</h4>
+                <p class="text-2xl font-black text-indigo-400 mt-2">السبت 25 تموز</p>
+                <div class="w-full bg-slate-800 h-1.5 rounded-full mt-4">
+                    <div class="bg-indigo-500 h-1.5 rounded-full" style="width: 100%"></div>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-2">فحص شامل لكافة بوردات كهرباء المنزل</p>
+            </div>
+        </div>
+
+        <!-- Actions and Tracker Section -->
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Left: Quick Actions -->
+            <div class="glass p-6 rounded-2xl border border-slate-800 space-y-4">
+                <h3 class="text-lg font-bold text-slate-100">إجراءات سريعة 🛠️</h3>
+                <a href="request.html" class="block w-full text-center bg-amber-500 hover:bg-amber-600 text-slate-950 font-black py-3 rounded-xl transition">طلب فني صيانة الآن</a>
+                <a href="https://wa.me/9647715480994" target="_blank" class="block w-full text-center bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold py-3 rounded-xl transition border border-slate-700">واتساب الفني والشركة</a>
+                <button onclick="shareMyGps()" class="block w-full text-center bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold py-3 rounded-xl transition border border-slate-800">مشاركة موقعي الجغرافي</button>
+                <p id="gps-status" class="text-xs text-center text-slate-500"></p>
+            </div>
+
+            <!-- Right: Technician Live Tracking Simulator -->
+            <div class="md:col-span-2 glass p-6 rounded-2xl border border-slate-800 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-100">تتبع مباشر للفني وموقع الصيانة 📍</h3>
+                    <span class="bg-amber-500 text-slate-950 text-xs font-bold px-2 py-1 rounded">نشط الآن</span>
+                </div>
+                <!-- Mock Map -->
+                <div class="h-64 rounded-xl bg-slate-950 border border-slate-800 relative overflow-hidden flex items-center justify-center">
+                    <!-- Simulate map graphics with CSS -->
+                    <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    <div class="absolute w-2 h-2 rounded-full bg-emerald-500 animate-ping"></div>
+                    <div class="absolute w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-white text-[8px]">🏠</div>
+                    <div class="absolute w-4 h-4 rounded-full bg-amber-500 animate-pulse flex items-center justify-center font-bold text-slate-950 text-[8px]" style="top: 30%; right: 40%">🔧</div>
+                    
+                    <div class="absolute bottom-4 right-4 bg-slate-900/90 border border-slate-700 p-3 rounded-lg text-xs space-y-1">
+                        <p class="font-bold">الفني: أحمد الكهربائي</p>
+                        <p class="text-slate-400">يبعد: 2.3 كم - المنصور</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- House Maintenance History (Before/After Photos) -->
+        <div class="glass p-6 rounded-2xl border border-slate-800 space-y-6">
+            <h3 class="text-lg font-bold text-slate-100">سجل صيانة بيتك المصور 📸</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 space-y-4">
+                    <div class="flex justify-between text-xs text-slate-400">
+                        <span>الصيانة الأخيرة: 10 تموز 2026</span>
+                        <span class="text-amber-500">تم الاصلاح</span>
+                    </div>
+                    <h4 class="font-bold">تصليح وتأمين بورد تبريد الصالة</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-900 h-32 rounded-lg border border-red-500/20 flex flex-col items-center justify-center text-xs text-slate-500">
+                            <span>صورة قبل الصيانة ❌</span>
+                            <span class="text-[10px] mt-1">(أسلاك مكشوفة وتالفة)</span>
+                        </div>
+                        <div class="bg-slate-900 h-32 rounded-lg border border-emerald-500/20 flex flex-col items-center justify-center text-xs text-slate-500">
+                            <span>صورة بعد الصيانة ✓</span>
+                            <span class="text-[10px] mt-1">(ترتيب وأنابيب حماية)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 space-y-4">
+                    <div class="flex justify-between text-xs text-slate-400">
+                        <span>الصيانة السابقة: 24 حزيران 2026</span>
+                        <span class="text-amber-500">تم الاصلاح</span>
+                    </div>
+                    <h4 class="font-bold">تبديل خلاط وحنفيات مياه المطبخ</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-900 h-32 rounded-lg border border-red-500/20 flex flex-col items-center justify-center text-xs text-slate-500">
+                            <span>صورة قبل الصيانة ❌</span>
+                            <span class="text-[10px] mt-1">(تسريب وصدأ شديد)</span>
+                        </div>
+                        <div class="bg-slate-900 h-32 rounded-lg border border-emerald-500/20 flex flex-col items-center justify-center text-xs text-slate-500">
+                            <span>صورة بعد الصيانة ✓</span>
+                            <span class="text-[10px] mt-1">(خلاط جداري إيطالي جديد)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script for quick actions -->
+    <script>
+        function shareMyGps() {
+            const status = document.getElementById('gps-status');
+            if(!navigator.geolocation) {
+                status.innerText = "متصفحك لا يدعم تحديد الموقع.";
+                return;
+            }
+            status.innerText = "جاري تحديد موقعك وإرساله للفني... ⏳";
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    status.innerText = `✓ تم تحديد موقعك الجغرافي بنجاح وجاري إرساله للفني على الخارطة! (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`;
+                    status.className = "text-xs text-center text-emerald-400 mt-2 font-bold";
+                },
+                () => {
+                    status.innerText = "تعذر الحصول على موقعك. يرجى تفعيل GPS.";
+                    status.className = "text-xs text-center text-red-400 mt-2";
+                }
+            );
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12">
+        <div class="text-center text-xs text-slate-600">
+            جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.
+        </div>
+    </footer>
+</body>
+</html>

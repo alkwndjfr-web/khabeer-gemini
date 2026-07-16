@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>باقات الاشتراك | خبير</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Navigation Bar -->
+    <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
+            <span class="text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold">بغداد 🇮🇶</span>
+        </div>
+        <div class="hidden md:flex gap-6 items-center text-sm font-medium">
+            <a href="index.html" class="hover:text-amber-400 transition">الرئيسية</a>
+            <a href="pricing.html" class="text-amber-400 hover:text-amber-300 transition">الباقات والاشتراكات</a>
+            <a href="request.html" class="hover:text-amber-400 transition">طلب خدمة</a>
+            <a href="dashboard.html" class="hover:text-amber-400 transition">لوحة العميل</a>
+            <a href="tech.html" class="hover:text-amber-400 transition">لوحة الفني</a>
+            <a href="admin.html" class="hover:text-amber-400 transition">لوحة الإدارة</a>
+        </div>
+        <div>
+            <a href="pricing.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2 rounded-lg text-sm transition shadow-lg shadow-amber-500/20">اشترك الآن</a>
+        </div>
+    </nav>
+
+    <!-- Pricing Body -->
+    <main class="container mx-auto px-6 py-16 space-y-12">
+        <div class="text-center space-y-4 max-w-2xl mx-auto">
+            <h1 class="text-3xl md:text-5xl font-black">باقات اشتراك <span class="text-amber-500">خبير</span></h1>
+            <p class="text-slate-400">اختر نوع الاشتراك والمدة الأنسب لمنزلك واحصل على الخصم المباشر والتحفيزي.</p>
+        </div>
+
+        <!-- Interval Selector Toggle -->
+        <div class="flex justify-center">
+            <div class="bg-slate-900 p-1.5 rounded-full flex gap-1 border border-slate-800">
+                <button id="btn-monthly" onclick="setBilling('monthly')" class="px-5 py-2.5 rounded-full text-sm font-bold transition bg-amber-500 text-slate-950">شهري</button>
+                <button id="btn-semi" onclick="setBilling('semi')" class="px-5 py-2.5 rounded-full text-sm font-bold transition text-slate-400 hover:text-slate-200">نصف سنوي <span class="text-emerald-400 text-xs">(-15%)</span></button>
+                <button id="btn-yearly" onclick="setBilling('yearly')" class="px-5 py-2.5 rounded-full text-sm font-bold transition text-slate-400 hover:text-slate-200">سنوي <span class="text-emerald-400 text-xs">(-25%)</span></button>
+            </div>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="grid md:grid-cols-3 gap-8 items-stretch pt-6">
+            <!-- Lite Card -->
+            <div class="glass p-8 rounded-2xl flex flex-col justify-between border border-slate-800 relative">
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold text-slate-100">خبير لايت</h3>
+                    <p class="text-xs text-slate-400">صيانة أساسية ومحدودة للشقق والبيوت الصغيرة.</p>
+                    <div class="pt-4">
+                        <span id="price-lite" class="text-3xl font-black text-amber-500">29,000</span>
+                        <span class="text-sm text-slate-400"> د.ع / <span id="label-lite">شهر</span></span>
+                    </div>
+                    <span id="save-lite" class="hidden bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-bold"></span>
+                    <hr class="border-slate-800">
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li>✦ <strong class="text-slate-100">4 طلبات صيانة</strong> شهرياً</li>
+                        <li>✦ تغطية لـ <strong class="text-slate-100">7 مصالح أساسية</strong></li>
+                        <li>✦ فني صيانة خلال 24 ساعة</li>
+                        <li>✦ ضمان صيانة لمدة 7 أيام</li>
+                    </ul>
+                </div>
+                <div class="pt-8">
+                    <a id="link-lite" href="#" target="_blank" class="block text-center bg-slate-800 hover:bg-slate-700 font-bold py-3 rounded-xl transition">اشترك الآن</a>
+                </div>
+            </div>
+
+            <!-- Plus Card (Popular) -->
+            <div class="glass p-8 rounded-2xl flex flex-col justify-between border-2 border-amber-500 relative shadow-2xl shadow-amber-500/5">
+                <span class="absolute -top-4 right-6 bg-amber-500 text-slate-950 font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">الأكثر طلباً 🔥</span>
+                <div class="space-y-4">
+                    <h3 class="text-2xl font-black text-slate-100">خبير بلس</h3>
+                    <p class="text-xs text-slate-400">التغطية الكاملة للبيوت والأسر في بغداد.</p>
+                    <div class="pt-4">
+                        <span id="price-plus" class="text-4xl font-black text-amber-500">49,000</span>
+                        <span class="text-sm text-slate-400"> د.ع / <span id="label-plus">شهر</span></span>
+                    </div>
+                    <span id="save-plus" class="hidden bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-bold"></span>
+                    <hr class="border-slate-800">
+                    <ul class="space-y-3 text-sm text-slate-200">
+                        <li>✦ <strong class="text-amber-400">8 طلبات صيانة</strong> شهرياً</li>
+                        <li>✦ تغطية شاملة لـ <strong class="text-amber-400">14 مصلحة</strong></li>
+                        <li>✦ فني طوارئ خلال <strong class="text-amber-400">90 دقيقة</strong></li>
+                        <li>✦ ضمان صيانة حقيقي لمدة <strong class="text-amber-400">21 يوم</strong></li>
+                        <li>✦ تتبع مباشر للفني على الخارطة</li>
+                    </ul>
+                </div>
+                <div class="pt-8">
+                    <a id="link-plus" href="#" target="_blank" class="block text-center bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition shadow-lg shadow-amber-500/20">اشترك الآن</a>
+                </div>
+            </div>
+
+            <!-- Pro Card -->
+            <div class="glass p-8 rounded-2xl flex flex-col justify-between border border-slate-800 relative">
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold text-slate-100">خبير برو (VIP)</h3>
+                    <p class="text-xs text-slate-400">صيانة بلا حدود للفلل، القصور والشركات الناشئة.</p>
+                    <div class="pt-4">
+                        <span id="price-pro" class="text-3xl font-black text-amber-500">79,000</span>
+                        <span class="text-sm text-slate-400"> د.ع / <span id="label-pro">شهر</span></span>
+                    </div>
+                    <span id="save-pro" class="hidden bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-bold"></span>
+                    <hr class="border-slate-800">
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li>✦ <strong class="text-slate-100">طلبات غير محدودة</strong> VIP</li>
+                        <li>✦ زيارة صيانة وقائية شهرية مجدولة</li>
+                        <li>✦ أولوية قصوى في الاستجابة (أقل من ساعة)</li>
+                        <li>✦ ضمان صيانة ذهبي لمدة 30 يوم</li>
+                    </ul>
+                </div>
+                <div class="pt-8">
+                    <a id="link-pro" href="#" target="_blank" class="block text-center bg-slate-800 hover:bg-slate-700 font-bold py-3 rounded-xl transition">اشترك الآن</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script for Dynamic Price and WhatsApp Text -->
+    <script>
+        const phone = "9647715480994";
+        
+        const plans = {
+            monthly: {
+                lite: { price: "29,000", label: "شهر", save: "", code: "لايت الشهرية" },
+                plus: { price: "49,000", label: "شهر", save: "", code: "بلس الشهرية" },
+                pro: { price: "79,000", label: "شهر", save: "", code: "برو الشهرية" }
+            },
+            semi: {
+                lite: { price: "149,000", label: "6 أشهر", save: "وفرت 25,000 د.ع! (-15%)", code: "لايت النصف سنوية" },
+                plus: { price: "249,000", label: "6 أشهر", save: "وفرت 45,000 د.ع! (-15%)", code: "بلس النصف سنوية" },
+                pro: { price: "399,000", label: "6 أشهر", save: "وفرت 75,000 د.ع! (-15%)", code: "برو النصف سنوية" }
+            },
+            yearly: {
+                lite: { price: "259,000", label: "سنة", save: "وفرت 89,000 د.ع! (-25% شهرين مجاناً)", code: "لايت السنوية" },
+                plus: { price: "439,000", label: "سنة", save: "وفرت 149,000 د.ع! (-25% شهرين مجاناً)", code: "بلس السنوية" },
+                pro: { price: "699,000", label: "سنة", save: "وفرت 249,000 د.ع! (-25% شهرين مجاناً)", code: "برو السنوية" }
+            }
+        };
+
+        function setBilling(interval) {
+            // Update buttons styling
+            const btnMonthly = document.getElementById('btn-monthly');
+            const btnSemi = document.getElementById('btn-semi');
+            const btnYearly = document.getElementById('btn-yearly');
+            
+            [btnMonthly, btnSemi, btnYearly].forEach(btn => {
+                btn.className = "px-5 py-2.5 rounded-full text-sm font-bold transition text-slate-400 hover:text-slate-200";
+            });
+
+            const activeBtn = document.getElementById('btn-' + (interval === 'monthly' ? 'monthly' : interval === 'semi' ? 'semi' : 'yearly'));
+            activeBtn.className = "px-5 py-2.5 rounded-full text-sm font-bold transition bg-amber-500 text-slate-950";
+
+            // Update UI elements
+            const pLite = plans[interval].lite;
+            const pPlus = plans[interval].plus;
+            const pPro = plans[interval].pro;
+
+            document.getElementById('price-lite').innerText = pLite.price;
+            document.getElementById('label-lite').innerText = pLite.label;
+            toggleSave('save-lite', pLite.save);
+
+            document.getElementById('price-plus').innerText = pPlus.price;
+            document.getElementById('label-plus').innerText = pPlus.label;
+            toggleSave('save-plus', pPlus.save);
+
+            document.getElementById('price-pro').innerText = pPro.price;
+            document.getElementById('label-pro').innerText = pPro.label;
+            toggleSave('save-pro', pPro.save);
+
+            // Update WhatsApp Links
+            updateWaLink('link-lite', pLite.code, pLite.price);
+            updateWaLink('link-plus', pPlus.code, pPlus.price);
+            updateWaLink('link-pro', pPro.code, pPro.price);
+        }
+
+        function toggleSave(id, saveText) {
+            const el = document.getElementById(id);
+            if(saveText) {
+                el.innerText = saveText;
+                el.classList.remove('hidden');
+                el.classList.add('inline-block');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        function updateWaLink(id, planCode, price) {
+            const text = encodeURIComponent(`مرحباً خبير، أريد الاشتراك في باقة (${planCode}) بسعر ${price} د.ع. يرجى تزويدي بالخطوات وتأكيد منطقتي في بغداد.`);
+            document.getElementById(id).href = `https://wa.me/${phone}?text=${text}`;
+        }
+
+        // Initialize with monthly values
+        setBilling('monthly');
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12">
+        <div class="text-center text-xs text-slate-600">
+            جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.
+        </div>
+    </footer>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خبير | Khabeer - راحة بالك علينا</title>
+    <title>Khabeer | خبير - راحة بالك علينا</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -17,12 +17,6 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-@media (prefers-color-scheme: light) {
-    body {
-        background-color: white !important;
-        color: black !important;
-    }
-}
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -30,8 +24,8 @@
     <!-- Navigation Bar -->
     <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
         <div class="flex items-center gap-3">
-            <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
-            <span class="text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold">بغداد 🇮🇶</span>
+            <span class="text-2xl font-black text-amber-500">Khabeer | خبير</span>
+            <span class="text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold">بغداد IQ</span>
         </div>
         <div class="hidden md:flex gap-6 items-center text-sm font-medium">
             <a href="index.html" class="text-amber-400 hover:text-amber-300 transition">الرئيسية</a>
@@ -41,301 +35,48 @@
             <a href="tech.html" class="hover:text-amber-400 transition">لوحة الفني</a>
             <a href="admin.html" class="hover:text-amber-400 transition">لوحة الإدارة</a>
         </div>
-        <div>
-            <a href="pricing.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2 rounded-lg text-sm transition shadow-lg shadow-amber-500/20">اشترك الآن</a>
-        </div>
+        <a href="pricing.html" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-5 py-2 rounded-lg font-bold transition text-sm">اشترك الآن</a>
     </nav>
 
-    <!-- Hero Section with Screen-in-Screen Mockup -->
-    <header class="container mx-auto px-6 py-16 text-center lg:text-right grid lg:grid-cols-2 gap-12 items-center">
-        <div class="space-y-6">
-            <span class="bg-amber-500/10 text-amber-400 px-4 py-2 rounded-full text-xs font-bold tracking-wide">أول منصة صيانة باشتراك شهري في العراق</span>
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-tight">
-                راحة بالك علينا.. <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">صيانة بيتك باشتراك واحد!</span>
-            </h1>
-            <p class="text-slate-400 text-lg md:text-xl leading-relaxed max-w-xl">
-                ودع القلق ومصاريف الصيانة المفاجئة. باشتراك شهري ثابت في بغداد، نغطي كافة أعطال الكهرباء، السباكة، التكييف، والأجهزة المنزلية بزيارات غير محدودة وضمان حقيقي.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-                <a href="pricing.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 text-lg font-bold px-8 py-4 rounded-xl transition shadow-lg shadow-amber-500/20 text-center">عرض باقات الاشتراك</a>
-                <a href="request.html" class="border border-slate-700 hover:border-amber-500 text-slate-300 hover:text-amber-400 text-lg font-semibold px-8 py-4 rounded-xl transition text-center">طلب صيانة عاجلة</a>
-            </div>
+    <!-- Hero Section -->
+    <main class="flex-grow flex flex-col items-center justify-center text-center px-4 py-20">
+        <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+            أول منصة صيانة باشتراك شهري في العراق
+        </span>
+        <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+            راحة بالك علينا.. <br>
+            <span class="text-amber-500">صيانة بيتك باشتراك واحد!</span>
+        </h1>
+        <p class="text-lg text-slate-300 max-w-2xl mb-10 leading-relaxed">
+            ودع القلق ومصاريف الصيانة المفاجئة. باشتراك شهري ثابت في بغداد، نغطي كافة أعطال الكهرباء، السباكة، التكييف، والأجهزة المنزلية بزيارات غير محدودة وضمان حقيقي.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="pricing.html" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-8 py-3.5 rounded-xl font-bold text-lg transition shadow-lg shadow-amber-500/30">
+                عرض باقات الاشتراك
+            </a>
+            <a href="request.html" class="glass hover:bg-slate-800 text-white px-8 py-3.5 rounded-xl font-bold text-lg transition border border-slate-600">
+                طلب صيانة عاجلة
+            </a>
         </div>
+    </main>
 
-        <!-- Dashboard Screen-in-Screen Mockup -->
-        <div class="relative mx-auto w-full max-w-lg lg:max-w-none">
-            <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-500 to-indigo-500 opacity-30 blur-lg"></div>
-            <div class="relative glass rounded-2xl shadow-2xl overflow-hidden text-right">
-                <!-- Browser Header -->
-                <div class="bg-slate-950/80 px-4 py-3 flex items-center justify-between border-b border-slate-800">
-                    <div class="flex gap-1.5">
-                        <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
-                        <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
-                        <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
-                    </div>
-                    <span class="text-xs text-slate-500 font-mono">khabeer.vercel.app/dashboard</span>
-                    <span class="w-4 h-4"></span>
-                </div>
-                <!-- Mockup Content (Dashboard Interface) -->
-                <div class="p-6 bg-slate-900/50 space-y-6">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-xs text-slate-400">مرحباً بك، أبو مصطفى 👋</p>
-                            <h4 class="text-lg font-bold text-slate-100">باقة خبير بلس (نشطة)</h4>
-                        </div>
-                        <span class="bg-emerald-500/20 text-emerald-400 text-xs px-3 py-1 rounded-full font-bold">مؤمن بالكامل</span>
-                    </div>
-                    <!-- Stats widgets inside mockup -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/50">
-                            <span class="text-xs text-slate-400">التوفير المالي هذا العام</span>
-                            <p class="text-lg font-black text-emerald-400 mt-1">185,000 د.ع</p>
-                        </div>
-                        <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/50">
-                            <span class="text-xs text-slate-400">الضمان النشط</span>
-                            <p class="text-lg font-black text-amber-400 mt-1">14 يوم متبقي</p>
-                        </div>
-                    </div>
-                    <!-- Live Tech Tracking Simulator -->
-                    <div class="bg-slate-950/50 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 font-bold">
-                                🔧
-                            </div>
-                            <div>
-                                <h5 class="text-sm font-bold">الفني (أحمد الكهربائي)</h5>
-                                <p class="text-xs text-slate-500">في الطريق إليك - 12 دقيقة للوصول</p>
-                            </div>
-                        </div>
-                        <span class="bg-amber-500 text-slate-950 text-xs font-bold px-2 py-1 rounded">تتبع مباشر</span>
-                    </div>
-                </div>
+    <!-- Stats Section -->
+    <div class="bg-black py-10 px-4 mt-auto">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x md:divide-x-reverse divide-slate-800">
+            <div class="py-4 md:py-0">
+                <div class="text-4xl font-black text-amber-500 mb-2">1,200+ بيت</div>
+                <div class="text-sm text-slate-400">مشترك ومحمي بالكامل في بغداد</div>
+            </div>
+            <div class="py-4 md:py-0">
+                <div class="text-4xl font-black text-amber-500 mb-2">90 دقيقة</div>
+                <div class="text-sm text-slate-400">متوسط سرعة وصول الفني لموقعك</div>
+            </div>
+            <div class="py-4 md:py-0">
+                <div class="text-4xl font-black text-amber-500 mb-2">4.9 / 5 <span class="text-2xl">★</span></div>
+                <div class="text-sm text-slate-400">تقييم رضا العملاء في بغداد</div>
             </div>
         </div>
-    </header>
-
-    <!-- Statistics Section -->
-    <section class="bg-slate-950 py-12 border-y border-slate-800">
-        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div class="p-4 space-y-2">
-                <h3 class="text-4xl font-black text-amber-500">★ 4.9 / 5</h3>
-                <p class="text-slate-400 font-medium">تقييم رضا العملاء في بغداد</p>
-            </div>
-            <div class="p-4 space-y-2 border-y md:border-y-0 md:border-x border-slate-800">
-                <h3 class="text-4xl font-black text-amber-500">90 دقيقة</h3>
-                <p class="text-slate-400 font-medium">متوسط سرعة وصول الفني لموقعك</p>
-            </div>
-            <div class="p-4 space-y-2">
-                <h3 class="text-4xl font-black text-amber-500">1,200+ بيت</h3>
-                <p class="text-slate-400 font-medium">مشترك ومحمي بالكامل في بغداد</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Khabeer (Story) -->
-    <section class="container mx-auto px-6 py-20 space-y-12">
-        <div class="text-center space-y-4 max-w-2xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-black">لماذا أنشأنا <span class="text-amber-500">خبير</span>؟</h2>
-            <p class="text-slate-400">قصتنا بدأت من المعاناة اليومية في كل بيت بغدادي للبحث عن فني ثقة وأسعار عشوائية بدون ضمان.</p>
-        </div>
-        <div class="grid md:grid-cols-2 gap-8 items-center">
-            <div class="space-y-6">
-                <h3 class="text-2xl font-bold text-amber-400">حل متكامل بضغطة زر</h3>
-                <p class="text-slate-300 leading-relaxed">
-                    كثيراً ما يتعطل المكيف في صيف بغداد اللاهب، أو يحدث تسريب مياه مفاجئ، ونقضي الساعات في البحث عن فنيين، والنتيجة أسعار مبالغ فيها وصيانة مؤقتة.
-                </p>
-                <p class="text-slate-300 leading-relaxed">
-                    من هنا ولدت فكرة <strong>خبير</strong> كأول منصة اشتراك صيانة متكاملة. نحن نوفر لك فنيين معتمدين مدربين وبأدوات متطورة، بعقد صيانة شهري يغطي كل شيء. راحة بالك الحقيقية تبدأ من هنا.
-                </p>
-            </div>
-            <div class="glass p-8 rounded-2xl space-y-4">
-                <h4 class="text-xl font-bold text-slate-100">معايير خبير للثقة والأمان 🛡️</h4>
-                <ul class="space-y-3 text-slate-400">
-                    <li class="flex items-center gap-3">✓ <span class="text-slate-200">فحص خلفية الفنيين الأمني والجنائي قبل التوظيف.</span></li>
-                    <li class="flex items-center gap-3">✓ <span class="text-slate-200">ضمان ذهبي لمدة 30 يوم على كل عملية صيانة.</span></li>
-                    <li class="flex items-center gap-3">✓ <span class="text-slate-200">دعم فني وتواصل مباشر على مدار الساعة عبر الواتساب.</span></li>
-                    <li class="flex items-center gap-3">✓ <span class="text-slate-200">أسعار اشتراكات مدروسة وشفافة تناسب الجميع.</span></li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section -->
-    <section class="bg-slate-900/40 py-20 border-t border-slate-800">
-        <div class="container mx-auto px-6 space-y-16">
-            <div class="text-center space-y-4 max-w-2xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black">خدماتنا الشاملة 🛠️</h2>
-                <p class="text-slate-400">باقاتنا تغطي كافة التخصصات والاحتياجات ليبقى منزلك سليماً دائماً.</p>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Service Card 1 -->
-                <div class="glass p-6 rounded-2xl space-y-4 hover:border-amber-500/50 transition duration-300">
-                    <div class="text-3xl">⚡</div>
-                    <h3 class="text-xl font-bold">أعمال الكهرباء</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">تصليح البوردات، تأسيس وتغيير خطوط التغذية، فحص الأحمال، تبديل السويتشات والمقابس وتجهيز الإنارة بالكامل.</p>
-                </div>
-                <!-- Service Card 2 -->
-                <div class="glass p-6 rounded-2xl space-y-4 hover:border-amber-500/50 transition duration-300">
-                    <div class="text-3xl">🚰</div>
-                    <h3 class="text-xl font-bold">السباكة والمياه</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">معالجة تسريب المياه، تسليك المجاري، تبديل خلاطات المياه، صيانة السخانات، وفحص مضخات المياه والخزانات.</p>
-                </div>
-                <!-- Service Card 3 -->
-                <div class="glass p-6 rounded-2xl space-y-4 hover:border-amber-500/50 transition duration-300">
-                    <div class="text-3xl">❄️</div>
-                    <h3 class="text-xl font-bold">التكييف والتبريد</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">غسيل السبلت والأجهزة وصيانتها، فحص وتعبئة غاز التبريد، وحل مشاكل ضعف التبريد وتسريب المياه من المكيف.</p>
-                </div>
-                <!-- Service Card 4 -->
-                <div class="glass p-6 rounded-2xl space-y-4 hover:border-amber-500/50 transition duration-300">
-                    <div class="text-3xl">🪚</div>
-                    <h3 class="text-xl font-bold">النجارة والألمنيوم</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">تصليح الأبواب والشبابيك، صيانة الكالونات، تصليح المطابخ، وتبديل جام أو زجاج الشبابيك التالف.</p>
-                </div>
-                <!-- Service Card 5 -->
-                <div class="glass p-6 rounded-2xl space-y-4 hover:border-amber-500/50 transition duration-300">
-                    <div class="text-3xl">📺</div>
-                    <h3 class="text-xl font-bold">الأجهزة المنزلية</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">صيانة الغسالات، الثلاجات، المجمّدات، الأفران الكهربائية والغازية، وميكروويف المطابخ بدقة وعناية.</p>
-                </div>
-                <!-- Service Card 6 -->
-                <div class="glass p-6 rounded-2xl space-y-4 hover:border-amber-500/50 transition duration-300">
-                    <div class="text-3xl">🛡️</div>
-                    <h3 class="text-xl font-bold">الوقاية الموسمية</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">زيارات دورية لفحص كهرباء المنزل قبل الصيف، وتنظيف وغسيل السبلت، وتأمين السخانات ومصادر المياه قبل الشتاء.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How we work -->
-    <section class="container mx-auto px-6 py-20 space-y-16">
-        <div class="text-center space-y-4 max-w-2xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-black">كيف يعمل موقع خبير؟ 🤝</h2>
-            <p class="text-slate-400">بثلاث خطوات بسيطة فقط تحمي بيتك وتضمن صيانته بالكامل.</p>
-        </div>
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="text-center space-y-4">
-                <div class="w-16 h-16 bg-amber-500 text-slate-950 text-2xl font-black flex items-center justify-center rounded-full mx-auto shadow-lg shadow-amber-500/20">١</div>
-                <h3 class="text-xl font-bold">اختر الباقة المناسبة لك</h3>
-                <p class="text-slate-400 text-sm">تصفح خطط الأسعار والاشتراكات الشهرية أو السنوية واختر الأنسب لحجم منزلك وعائلتك.</p>
-            </div>
-            <div class="text-center space-y-4">
-                <div class="w-16 h-16 bg-amber-500 text-slate-950 text-2xl font-black flex items-center justify-center rounded-full mx-auto shadow-lg shadow-amber-500/20">٢</div>
-                <h3 class="text-xl font-bold">اطلب فني بضغطة واحدة</h3>
-                <p class="text-slate-400 text-sm">افتح صفحة طلب الخدمة، شارك موقعك GPS، وسجل مشكلتك ليتجه الفني إليك فوراً.</p>
-            </div>
-            <div class="text-center space-y-4">
-                <div class="w-16 h-16 bg-amber-500 text-slate-950 text-2xl font-black flex items-center justify-center rounded-full mx-auto shadow-lg shadow-amber-500/20">٣</div>
-                <h3 class="text-xl font-bold">استرخ واستمتع بالضمان</h3>
-                <p class="text-slate-400 text-sm">يقوم الفني بالصيانة الاحترافية مع تقديم ضمان حقيقي ومتابعة دورية لحالة بيتك.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="bg-slate-900/40 py-20 border-t border-slate-800">
-        <div class="container mx-auto px-6 space-y-16">
-            <div class="text-center space-y-4 max-w-2xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-black">ماذا يقول مشتركو خبير؟ 🗣️</h2>
-                <p class="text-slate-400">ثقة عملائنا هي سر استمرارنا وتقديمنا لأفضل خدمات الصيانة المنزلية.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass p-6 rounded-2xl space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center font-bold text-amber-500">أ ح</div>
-                        <div>
-                            <h4 class="font-bold text-sm">أحمد حسن</h4>
-                            <p class="text-xs text-slate-500">المنصور، بغداد</p>
-                        </div>
-                    </div>
-                    <div class="text-amber-500">★★★★★</div>
-                    <p class="text-slate-300 text-sm">"الاشتراك وفر علي مبالغ طائلة وصداع رهيب. غسيل مكيفات السبلت والتصليحات تتم بسرعة واحترافية وبدون دفع ولا دينار إضافي."</p>
-                </div>
-                <div class="glass p-6 rounded-2xl space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center font-bold text-amber-500">م ع</div>
-                        <div>
-                            <h4 class="font-bold text-sm">مريم علي</h4>
-                            <p class="text-xs text-slate-500">الكرادة، بغداد</p>
-                        </div>
-                    </div>
-                    <div class="text-amber-500">★★★★★</div>
-                    <p class="text-slate-300 text-sm">"أهم شيء الأمان والالتزام بالوقت. الفنيين في غاية الأدب والمهنية، وتطبيق التتبع يعلمك بموعد وصولهم بالدقيقة."</p>
-                </div>
-                <div class="glass p-6 rounded-2xl space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center font-bold text-amber-500">س م</div>
-                        <div>
-                            <h4 class="font-bold text-sm">سعد محمود</h4>
-                            <p class="text-xs text-slate-500">اليرموك، بغداد</p>
-                        </div>
-                    </div>
-                    <div class="text-amber-500">★★★★★</div>
-                    <p class="text-slate-300 text-sm">"زيارات وقائية قبل الصيف والشتاء حلت مشاكل الكهرباء في البيت نهائياً. الاشتراك السنوي وفر لي أكثر من 25% من التكلفة."</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="container mx-auto px-6 py-20 max-w-4xl space-y-12">
-        <h2 class="text-3xl font-black text-center">الأسئلة الشائعة 🤔</h2>
-        <div class="space-y-4">
-            <details class="glass rounded-xl p-5 group cursor-pointer" open>
-                <summary class="font-bold text-lg flex justify-between items-center list-none">
-                    <span>ماذا يشمل اشتراك صيانة خبير؟</span>
-                    <span class="text-amber-500 group-open:rotate-180 transition">▼</span>
-                </summary>
-                <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-                    يشمل الاشتراك كافة أعمال الكهرباء، السباكة، التكييف، النجارة، صيانة الأجهزة الكهربائية المنزلية، وتأمين المنزل مع الزيارات الدورية والطارئة وضمان حقيقي على كافة المواد والقطع المستخدمة.
-                </p>
-            </details>
-            <details class="glass rounded-xl p-5 group cursor-pointer">
-                <summary class="font-bold text-lg flex justify-between items-center list-none">
-                    <span>كيف يتم تتبع الفنيين؟</span>
-                    <span class="text-amber-500 group-open:rotate-180 transition">▼</span>
-                </summary>
-                <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-                    بمجرد قبول طلبك، يتم إرسال رابط تتبع مباشر لهاتفك يوضح موقع الفني على الخريطة والوقت المقدر لوصوله إليك بكل دقة وسهولة.
-                </p>
-            </details>
-            <details class="glass rounded-xl p-5 group cursor-pointer">
-                <summary class="font-bold text-lg flex justify-between items-center list-none">
-                    <span>هل تتوفر باقات سنوية ونصف سنوية؟</span>
-                    <span class="text-amber-500 group-open:rotate-180 transition">▼</span>
-                </summary>
-                <p class="text-slate-400 text-sm mt-3 leading-relaxed">
-                    نعم، نوفر باقات نصف سنوية بتوفير 15% وباقات سنوية بتوفير ضخم يصل إلى 25% (ما يعادل شهرين كاملين مجاناً) لتحقيق الاستفادة والراحة القصوى لبيتك.
-                </p>
-            </details>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12">
-        <div class="container mx-auto px-6 grid md:grid-cols-3 gap-8">
-            <div class="space-y-4">
-                <h4 class="text-lg font-bold text-amber-500">خبير | Khabeer</h4>
-                <p class="text-xs leading-relaxed">أول منصة صيانة منزلية متكاملة باشتراكات دورية ذكية في بغداد. نوفر لك الأمان التام وراحة البال بأعلى المعايير العالمية.</p>
-            </div>
-            <div class="space-y-4">
-                <h4 class="text-lg font-bold text-slate-100">المناطق المشمولة في بغداد 📍</h4>
-                <p class="text-xs leading-relaxed">
-                    الكرادة، المنصور، اليرموك، الأعظمية، الحارثية، الجادرية، زيونة، فلسطين، الدورة، الشعب، الغدير، السيدية، حي الجامعة، العامرية، القادسية.
-                </p>
-            </div>
-            <div class="space-y-4">
-                <h4 class="text-lg font-bold text-slate-100">تواصل معنا 📞</h4>
-                <p class="text-xs">المكتب الرئيسي: المنصور، بغداد، العراق</p>
-                <p class="text-xs">هاتف ودعم فني واتساب: <a href="https://wa.me/9647715480994" class="text-amber-500 font-bold hover:underline">9647715480994+</a></p>
-            </div>
-        </div>
-        <div class="text-center text-xs text-slate-600 mt-12 pt-6 border-t border-slate-900">
-            جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.
-        </div>
-    </footer>
+    </div>
 
 </body>
 </html>

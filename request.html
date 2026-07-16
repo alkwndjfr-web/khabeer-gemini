@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>طلب خدمة صيانة | خبير</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -43,7 +44,7 @@
         <div class="glass p-8 rounded-2xl border border-slate-800 space-y-6">
             <div class="text-center space-y-2">
                 <h1 class="text-2xl font-black text-slate-100">طلب فني صيانة عاجل 🔧</h1>
-                <p class="text-xs text-slate-400">املأ الحقول لمشاركة طلبك وتلقائياً سنقوم بربطه بالواتساب لإرساله للإدارة.</p>
+                <p class="text-xs text-slate-400">املأ الحقول لمشاركة طلبك وتلقائياً سنقوم بربطه بالواتساب وقاعدة البيانات السحابية.</p>
             </div>
 
             <div class="space-y-4">
@@ -96,8 +97,20 @@
     </main>
 
     <script>
-        const phone = "9647715480994";
-        let uploadedImageUrl = ""; // سنحفظ فيها رابط الصورة بعد رفعها
+        // ------------------------------------------------------------
+        // ⚠️ إعدادات السيرفر السحابي السري (استبدلها ببياناتك الحقيقية)
+        // ------------------------------------------------------------
+        const SUPABASE_URL = "https://nzwhrbaxhygivduwmria.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_-0A6mi2LDboRsW2MYRBb1A_I5q1Jikw"; // ضع الـ anon key هنا
+        const CLOUDINARY_CLOUD_NAME = "demo"; // ضع الـ Cloud Name الخاص بك هنا
+        const CLOUDINARY_UPLOAD_PRESET = "ml_default"; // ضع الـ Upload Preset غير المشفر هنا
+        
+        const whatsappPhone = "9647715480994";
+
+        // تهيئة اتصال Supabase
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let uploadedImageUrl = "";
 
         function getLocation() {
             const status = document.getElementById('gps-status');
@@ -116,7 +129,7 @@
                 (position) => {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
-                    coords.value = `https://maps.google.com/?q=${lat},${lon}`;
+                    coords.value = `https://www.google.com/maps?q=${lat},${lon}`;
                     status.innerText = "✓ تم تحديد موقعك الجغرافي بنجاح وجاهز للإرسال!";
                     status.className = "text-xs text-emerald-400 mt-2 text-center font-bold";
                 },
@@ -127,7 +140,6 @@
             );
         }
 
-        // دالة لمعاينة الصورة التي يختارها العميل فوراً في الصفحة
         function previewImage(event) {
             const file = event.target.files[0];
             const previewContainer = document.getElementById('preview-container');
@@ -142,12 +154,12 @@
             }
         }
 
-        // دالة الرفع الفعلية إلى سيرفر سحابي (Cloudinary)
+        // رفع الصورة حقيقياً لحسابك في Cloudinary
         async function uploadImage() {
             const fileInput = document.getElementById('image-file');
             const uploadStatus = document.getElementById('upload-status');
             
-            if (fileInput.files.length === 0) return ""; // إذا لم يتم اختيار صورة، نرجع نصاً فارغاً
+            if (fileInput.files.length === 0) return ""; 
 
             const file = fileInput.files[0];
             uploadStatus.innerText = "جاري رفع الصورة إلى السيرفر... ⏳";
@@ -155,10 +167,10 @@
 
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('upload_preset', 'ml_default'); // الإعداد الافتراضي والمجاني لرفع الصور الفوري
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
             try {
-                const response = await fetch('https://api.cloudinary.com/v1_1/demo/image/upload', {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
                     method: 'POST',
                     body: formData
                 });
@@ -168,7 +180,7 @@
                 const data = await response.json();
                 uploadStatus.innerText = "✓ تم رفع الصورة بنجاح وتوليد الرابط!";
                 uploadStatus.className = "text-xs text-emerald-400 font-bold";
-                return data.secure_url; // يرجع رابط الصورة الحقيقي على الإنترنت
+                return data.secure_url;
             } catch (error) {
                 console.error(error);
                 uploadStatus.innerText = "⚠️ فشل رفع الصورة، سيتم إرسال الطلب بدونها.";
@@ -189,21 +201,35 @@
                 return;
             }
 
-            // تعطيل الزر مؤقتاً لكي لا يضغط المستخدم مرتين أثناء عملية رفع الصورة
             submitBtn.disabled = true;
             submitBtn.innerText = "جاري معالجة ورفع طلبك... ⏳";
 
-            // 1. نقوم برفع الصورة أولاً وحفظ الرابط السحابي لها
+            // 1. رفع الصورة أولاً
             uploadedImageUrl = await uploadImage();
 
-            // 2. حفظ رابط الصورة محلياً في ذاكرة المتصفح لكي تقرأه صفحة الفني (tech.html) لاحقاً
-            if (uploadedImageUrl) {
-                localStorage.setItem('savedImageUrl', uploadedImageUrl);
-            } else {
-                localStorage.removeItem('savedImageUrl'); // مسح الرابط القديم إذا لم توجد صورة جديدة
+            // 2. الحفظ الحقيقي في قاعدة البيانات السحابية Supabase
+            try {
+                const { data, error } = await supabaseClient
+                    .from('orders')
+                    .insert([
+                        { 
+                            service_type: service, 
+                            problem_desc: desc, 
+                            manual_address: address, 
+                            gps_coords: gps, 
+                            image_url: uploadedImageUrl,
+                            status: 'pending'
+                        }
+                    ]);
+
+                if (error) throw error;
+                console.log("تم حفظ الطلب بنجاح في قاعدة البيانات السحابية!");
+            } catch (dbError) {
+                console.error("فشل حفظ الطلب في قاعدة البيانات:", dbError);
+                alert("حدث خطأ أثناء حفظ الطلب في السيرفر، ولكن سنتابع إرسال الواتساب.");
             }
 
-            // 3. نقوم بتضمين رابط الصورة المرفوعة بداخل رسالة الواتساب الموجهة للإدارة أيضاً!
+            // 3. صياغة رسالة الواتساب
             const imageLine = uploadedImageUrl ? `• *رابط صورة العطل:* ${uploadedImageUrl}\n` : `• *رابط صورة العطل:* لم يتم إرفاق صورة\n`;
 
             const formattedMessage = encodeURIComponent(
@@ -213,16 +239,15 @@
                 `• *تفاصيل العطل:* ${desc}\n` +
                 `• *العنوان اليدوي:* ${address}\n` +
                 `• *رابط موقع GPS:* ${gps}\n` +
-                imageLine + // السطر الجديد الخاص بالصورة المرفوعة
+                imageLine +
                 `────────────────────\n` +
                 `يرجى تأكيد إرسال الفني خلال 90 دقيقة.`
             );
 
-            // إعادة تفعيل الزر لشكله الطبيعي
             submitBtn.disabled = false;
             submitBtn.innerText = "إرسال الطلب للإدارة وتأكيد الفني 🚀";
 
-            window.open(`https://wa.me/${phone}?text=${formattedMessage}`, '_blank');
+            window.open(`https://wa.me/${whatsappPhone}?text=${formattedMessage}`, '_blank');
         }
     </script>
 

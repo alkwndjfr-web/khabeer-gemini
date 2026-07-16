@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة الفني | خبير</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -42,106 +43,145 @@
     <main class="container mx-auto px-6 py-12 max-w-2xl space-y-8">
         <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 space-y-2">
             <h1 class="text-2xl font-black">قائمة المهام اليومية 📋</h1>
-            <p class="text-xs text-slate-400">يرجى متابعة الطلبات المسندة إليك وتحديث الحالة لتبلغ العميل والإدارة فوراً.</p>
+            <p class="text-xs text-slate-400">يتم جلب طلبات العمل مباشرة من السيرفر السحابي حياً ومباشرة.</p>
         </div>
 
-        <div class="space-y-6">
-            <div class="glass p-6 rounded-2xl border-2 border-amber-500/50 space-y-4">
-                <div class="flex justify-between items-center">
-                    <span class="bg-amber-500 text-slate-950 font-bold text-[10px] px-2.5 py-1 rounded-full">نشط وقيد التنفيذ</span>
-                    <span class="text-xs text-slate-400">رقم الطلب: #KH-4822</span>
-                </div>
-                
-                <hr class="border-slate-800">
-
-                <div class="space-y-2 text-sm">
-                    <p>• <strong>العميل:</strong> أبو مصطفى</p>
-                    <p>• <strong>رقم الموبايل:</strong> 9647701234567</p>
-                    <p>• <strong>العنوان:</strong> المنصور، شارع الرواد، خلف صيدلية بغداد</p>
-                    <p>• <strong>نوع العطل:</strong> المكيف لا يبرد ويصدر صوتاً مرتفعاً</p>
-                </div>
-
-                <div class="border border-slate-800 bg-slate-950/40 p-4 rounded-xl space-y-2">
-                    <p class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                        📷 صورة العطل المرفقة:
-                    </p>
-                    
-                    <div id="tech-image-container" class="hidden space-y-2">
-                        <div class="relative overflow-hidden rounded-lg border border-slate-800 bg-slate-900">
-                            <img id="tech-customer-image" src="" alt="صورة العطل المرفوعة من العميل" class="w-full max-h-60 object-cover">
-                        </div>
-                        <a id="tech-image-link" href="#" target="_blank" class="block text-center text-xs text-amber-500 hover:text-amber-400 hover:underline">
-                            🔍 فتح الصورة بحجمها الكامل في نافذة جديدة
-                        </a>
-                    </div>
-
-                    <p id="tech-no-image" class="text-xs text-slate-500 italic py-1">
-                        لم يقم العميل بإرفاق أي صورة لهذا الطلب.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-3 gap-2 pt-2">
-                    <a href="https://wa.me/9647701234567" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-100 py-2.5 text-xs font-bold rounded-xl text-center">💬 واتساب العميل</a>
-                    <a href="tel:9647701234567" class="bg-slate-800 hover:bg-slate-700 text-slate-100 py-2.5 text-xs font-bold rounded-xl text-center">📞 اتصال هاتفي</a>
-                    <a href="https://maps.google.com/?q=33.3128,44.3615" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-amber-400 py-2.5 text-xs font-bold rounded-xl text-center">📍 فتح الموقع GPS</a>
-                </div>
-
-                <hr class="border-slate-800">
-
-                <div class="space-y-3">
-                    <p class="text-xs font-bold text-slate-300">تحديث حالة المهمة للعميل والإدارة:</p>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="updateStatus('on_the_way')" id="btn-way" class="bg-amber-500 text-slate-950 text-xs font-bold py-3 rounded-xl transition">أنا في الطريق 🚗</button>
-                        <button onclick="updateStatus('arrived')" id="btn-arrive" class="bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-bold py-3 rounded-xl transition">وصلت للموقع 📍</button>
-                        <button onclick="updateStatus('completed')" id="btn-done" class="bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-bold py-3 rounded-xl transition">اكتمل العمل ✓</button>
-                    </div>
-                    <p id="status-msg" class="text-xs text-center text-amber-400 font-bold mt-2">الحالة الحالية: تم إبلاغ العميل أنك في الطريق.</p>
-                </div>
+        <div id="tech-tasks-container" class="space-y-6">
+            <div id="loading-msg" class="text-center py-10 text-slate-400 animate-pulse">
+                جاري الاتصال بقاعدة البيانات السحابية وجلب المهام... ⏳
             </div>
         </div>
     </main>
 
     <script>
-        // كود جلب الصورة المرفوعة بمجرد تحميل الصفحة
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedImageUrl = localStorage.getItem('savedImageUrl');
-            const imageContainer = document.getElementById('tech-image-container');
-            const customerImage = document.getElementById('tech-customer-image');
-            const imageLink = document.getElementById('tech-image-link');
-            const noImageMsg = document.getElementById('tech-no-image');
+        // ------------------------------------------------------------
+        // ⚠️ ضع مفاتيحك السحابية هنا (يجب أن تطابق المفاتيح في صفحة الطلب)
+        // ------------------------------------------------------------
+        const SUPABASE_URL = "https://nzwhrbaxhygivduwmria.supabase.co"; 
+        const SUPABASE_ANON_KEY = "sb_publishable_-0A6mi2LDboRsW2MYRBb1A_I5q1Jikw"; 
 
-            if (savedImageUrl) {
-                customerImage.src = savedImageUrl;
-                imageLink.href = savedImageUrl;
-                
-                imageContainer.classList.remove('hidden'); // إظهار الصورة
-                noImageMsg.classList.add('hidden'); // إخفاء نص "لا توجد صورة"
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        window.addEventListener('DOMContentLoaded', fetchActiveOrders);
+
+        // دالة لجلب الطلبات الحقيقية من السيرفر
+        async function fetchActiveOrders() {
+            const container = document.getElementById('tech-tasks-container');
+            
+            try {
+                // جلب آخر 5 طلبات تم تسجيلها من العملاء
+                const { data: orders, error } = await supabaseClient
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (error) throw error;
+
+                if (!orders || orders.length === 0) {
+                    container.innerHTML = `
+                        <div class="glass p-8 text-center rounded-2xl border border-slate-800 text-slate-400 italic">
+                            📭 لا توجد مهام أو طلبات مسجلة حالياً في قاعدة البيانات.
+                        </div>`;
+                    return;
+                }
+
+                // مسح رسالة التحميل
+                container.innerHTML = "";
+
+                // بناء الكروت للطلبات السحابية الحقيقية
+                orders.forEach(order => {
+                    const orderCard = document.createElement('div');
+                    orderCard.className = "glass p-6 rounded-2xl border-2 border-slate-800 space-y-4 hover:border-amber-500/30 transition duration-300";
+                    
+                    // تحديد اللون المناسب للحالة
+                    let statusBadge = `<span class="bg-amber-500 text-slate-950 font-bold text-[10px] px-2.5 py-1 rounded-full">قيد الانتظار ⏳</span>`;
+                    if (order.status === 'on_the_way') {
+                        statusBadge = `<span class="bg-blue-500 text-white font-bold text-[10px] px-2.5 py-1 rounded-full">في الطريق 🚗</span>`;
+                    } else if (order.status === 'arrived') {
+                        statusBadge = `<span class="bg-emerald-500 text-slate-950 font-bold text-[10px] px-2.5 py-1 rounded-full">وصل الموقع 📍</span>`;
+                    } else if (order.status === 'completed') {
+                        statusBadge = `<span class="bg-slate-700 text-slate-300 font-bold text-[10px] px-2.5 py-1 rounded-full">مكتمل ✓</span>`;
+                    }
+
+                    // التحقق من وجود الصورة
+                    let imageSection = `
+                        <p class="text-xs text-slate-500 italic py-1">لم يقم العميل بإرفاق أي صورة لهذا الطلب.</p>
+                    `;
+                    if (order.image_url) {
+                        imageSection = `
+                            <div class="relative overflow-hidden rounded-lg border border-slate-800 bg-slate-900">
+                                <img src="${order.image_url}" alt="صورة العطل المرفوعة من العميل" class="w-full max-h-60 object-cover">
+                            </div>
+                            <a href="${order.image_url}" target="_blank" class="block text-center text-xs text-amber-500 hover:text-amber-400 hover:underline">
+                                🔍 فتح الصورة بحجمها الكامل في نافذة جديدة
+                            </a>
+                        `;
+                    }
+
+                    orderCard.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            ${statusBadge}
+                            <span class="text-xs text-slate-400">طلب رقم: #KH-${order.id}</span>
+                        </div>
+                        
+                        <hr class="border-slate-800">
+
+                        <div class="space-y-2 text-sm">
+                            <p>• <strong>نوع الخدمة:</strong> ${order.service_type}</p>
+                            <p>• <strong>العنوان:</strong> ${order.manual_address}</p>
+                            <p>• <strong>وصف العطل:</strong> ${order.problem_desc}</p>
+                        </div>
+
+                        <div class="border border-slate-800 bg-slate-950/40 p-4 rounded-xl space-y-2">
+                            <p class="text-xs font-bold text-amber-400 flex items-center gap-1.5">📷 صورة العطل المرفقة:</p>
+                            ${imageSection}
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 pt-2">
+                            <a href="https://wa.me/9647715480994" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-100 py-2.5 text-xs font-bold rounded-xl text-center">💬 إبلاغ الإدارة</a>
+                            <a href="${order.gps_coords}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-amber-400 py-2.5 text-xs font-bold rounded-xl text-center flex items-center justify-center gap-1">📍 فتح الـ GPS</a>
+                        </div>
+
+                        <hr class="border-slate-800">
+
+                        <div class="space-y-3">
+                            <p class="text-xs font-bold text-slate-300">تحديث حالة المهمة في السيرفر السحابي:</p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="updateStatus(${order.id}, 'on_the_way')" class="bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-300 text-[10px] font-bold py-2 rounded-lg transition">في الطريق 🚗</button>
+                                <button onclick="updateStatus(${order.id}, 'arrived')" class="bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-300 text-[10px] font-bold py-2 rounded-lg transition">وصلت 📍</button>
+                                <button onclick="updateStatus(${order.id}, 'completed')" class="bg-slate-800 hover:bg-blue-600 hover:text-white text-slate-300 text-[10px] font-bold py-2 rounded-lg transition">اكتمل العمل ✓</button>
+                            </div>
+                        </div>
+                    `;
+
+                    container.appendChild(orderCard);
+                });
+
+            } catch (error) {
+                console.error("خطأ أثناء جلب الطلبات من Supabase:", error);
+                container.innerHTML = `
+                    <div class="glass p-8 text-center rounded-2xl border border-red-500/20 text-red-400">
+                        ⚠️ فشل جلب البيانات من السيرفر السحابي. يرجى التأكد من المفاتيح أو إعدادات الإنترنت.
+                    </div>`;
             }
-        });
+        }
 
-        function updateStatus(state) {
-            const btnWay = document.getElementById('btn-way');
-            const btnArrive = document.getElementById('btn-arrive');
-            const btnDone = document.getElementById('btn-done');
-            const msg = document.getElementById('status-msg');
+        // دالة تحديث الحالة وتعديلها حقيقياً بداخل قاعدة البيانات السحابية
+        async function updateStatus(orderId, newState) {
+            try {
+                const { error } = await supabaseClient
+                    .from('orders')
+                    .update({ status: newState })
+                    .eq('id', orderId);
 
-            // Reset classes
-            [btnWay, btnArrive, btnDone].forEach(btn => {
-                btn.className = "bg-slate-800 text-slate-400 hover:text-slate-200 text-xs font-bold py-3 rounded-xl transition";
-            });
+                if (error) throw error;
 
-            if(state === 'on_the_way') {
-                btnWay.className = "bg-amber-500 text-slate-950 text-xs font-bold py-3 rounded-xl transition";
-                msg.innerText = "الحالة الحالية: تم إبلاغ العميل أنك في الطريق وعرض موقعك GPS لهم.";
-                msg.className = "text-xs text-center text-amber-400 font-bold mt-2";
-            } else if(state === 'arrived') {
-                btnArrive.className = "bg-emerald-500 text-slate-950 text-xs font-bold py-3 rounded-xl transition";
-                msg.innerText = "الحالة الحالية: وصلت لعنوان العميل، جاري المباشرة بالعمل.";
-                msg.className = "text-xs text-center text-emerald-400 font-bold mt-2";
-            } else if(state === 'completed') {
-                btnDone.className = "bg-blue-600 text-white text-xs font-bold py-3 rounded-xl transition";
-                msg.innerText = "الحالة الحالية: اكتمل العمل بنجاح! تم إرسال التقرير النهائي للإدارة للفوترة.";
-                msg.className = "text-xs text-center text-blue-400 font-bold mt-2";
+                alert("تم تحديث حالة الطلب بنجاح على السيرفر! مزامنة البيانات... 🔄");
+                fetchActiveOrders(); // إعادة جلب البيانات فوراً ليعاد بناء الكروت بالحالة الجديدة
+            } catch (error) {
+                console.error("فشل تحديث الحالة:", error);
+                alert("فشل التحديث في السيرفر السحابي.");
             }
         }
     </script>

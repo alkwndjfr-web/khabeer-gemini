@@ -73,7 +73,7 @@
                 const { data: orders, error } = await supabaseClient
                     .from('orders')
                     .select('*')
-                    .order('created_at', { ascending: false })
+                    .order('id', { ascending: false })
                     .limit(5);
 
                 if (error) throw error;

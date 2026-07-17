@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة العميل | طلب خدمة</title>
+    <title>لوحة العميل | طلب خدمة وتتبع مباشر</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- شريط التنقل المعدل ليتناسب مع الهواتف -->
+    <!-- شريط التنقل المتجاوب مع الهواتف -->
     <nav class="glass sticky top-0 z-50 px-4 py-4 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
         <div class="flex items-center gap-3">
             <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
@@ -38,20 +38,32 @@
 
     <main class="container mx-auto px-4 py-8 md:py-12 max-w-xl space-y-8">
         
-        <!-- شاشة الانتظار (تظهر بعد الإرسال) -->
-        <div id="successScreen" class="hidden glass p-8 rounded-2xl border border-emerald-500/30 text-center space-y-6 animate-pulse">
-            <div class="text-6xl">🚗</div>
-            <h2 class="text-2xl font-black text-emerald-400">تم إرسال طلبك بنجاح!</h2>
-            <p class="text-sm text-slate-300 leading-relaxed">
-                طلبك الآن معروض على شاشات الفنيين في الميدان.<br>
-                يرجى الانتظار، سيتم التواصل معك أو التوجه لموقعك قريباً.
+        <!-- شاشة التتبع والانتظار الذكية (تتحدث حياً ومباشرة بناءً على الفني) -->
+        <div id="successScreen" class="hidden glass p-8 rounded-2xl border border-amber-500/30 text-center space-y-6 shadow-2xl">
+            <!-- إيقونة متحركة ديناميكية -->
+            <div id="statusEmoji" class="text-7xl animate-bounce">⏳</div>
+            
+            <div class="space-y-2">
+                <span id="statusBadge" class="bg-amber-500 text-slate-950 font-black text-xs px-4 py-1.5 rounded-full inline-block">
+                    قيد الانتظار والمراجعة
+                </span>
+                <h2 id="statusTitle" class="text-2xl font-black text-slate-100 pt-2">تم إرسال طلبك بنجاح!</h2>
+            </div>
+
+            <p id="statusDesc" class="text-sm text-slate-400 leading-relaxed max-w-sm mx-auto">
+                طلبك الآن معروض على شاشات الفنيين في الميدان. يرجى الانتظار، سيقوم أحد الفنيين بقبول الطلب والتحرك فوراً.
             </p>
-            <button onclick="location.reload()" class="mt-4 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm px-6 py-3 rounded-xl transition">
-                إرسال طلب صيانة جديد 🔄
+
+            <div class="border-t border-slate-800 pt-4">
+                <p id="orderIdDisplay" class="text-xs text-slate-500 font-mono">رقم تتبع الطلب السحابي: #KH-0</p>
+            </div>
+
+            <button onclick="location.reload()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-3 rounded-xl transition">
+                طلب صيانة آخر أو فتح بلاغ جديد 🔄
             </button>
         </div>
 
-        <!-- نموذج الطلب -->
+        <!-- نموذج تقديم الطلب الأساسي -->
         <div id="formContainer">
             <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 space-y-2 text-center mb-6">
                 <h1 class="text-2xl font-black">أرسل طلب صيانة جديد 🚀</h1>
@@ -77,16 +89,16 @@
                     <input type="text" id="manual_address" required placeholder="المدينة، الحي، الشارع، رقم المنزل..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:outline-none transition">
                 </div>
 
-                <!-- وصف العطل + العداد -->
+                <!-- وصف العطل -->
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <label class="text-sm font-bold text-slate-300">وصف العطل بدقة</label>
                         <span id="charCount" class="text-xs text-slate-500 font-mono">0 / 200</span>
                     </div>
-                    <textarea id="problem_desc" required maxlength="200" rows="3" placeholder="اشرح المشكلة باختصار ليتمكن الفني من جلب القطع المناسبة..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:outline-none transition resize-none"></textarea>
+                    <textarea id="problem_desc" required maxlength="200" rows="3" placeholder="اشرح المشكلة باختصار..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:outline-none transition resize-none"></textarea>
                 </div>
 
-                <!-- زر الـ GPS -->
+                <!-- الموقع الجغرافي GPS -->
                 <div class="space-y-2">
                     <label class="text-sm font-bold text-slate-300">الموقع الجغرافي (GPS)</label>
                     <button type="button" id="gpsBtn" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-400 font-bold rounded-xl px-4 py-3 text-sm transition flex items-center justify-center gap-2">
@@ -108,13 +120,12 @@
                 <button type="submit" id="submitBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-lg rounded-xl px-4 py-4 transition shadow-lg shadow-amber-500/20">
                     إرسال الطلب للفنيين الآن 🚀
                 </button>
-                <p id="loadingMsg" class="text-center text-amber-400 text-sm hidden font-bold animate-pulse">جاري رفع البيانات وإرسال الطلب... ⏳</p>
+                <p id="loadingMsg" class="text-center text-amber-400 text-sm hidden font-bold animate-pulse">جاري رفع البيانات وتأمين الاتصال السحابي... ⏳</p>
             </form>
         </div>
     </main>
 
     <script>
-        // إعدادات السيرفر السحابي
         const SUPABASE_URL = "https://nzwhrbaxhygivduwmria.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_-0A6mi2LDboRsW2MYRBb1A_I5q1Jikw"; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -124,11 +135,9 @@
         const charCount = document.getElementById('charCount');
         problemDesc.addEventListener('input', function() {
             charCount.textContent = `${this.value.length} / 200`;
-            if(this.value.length >= 200) charCount.classList.add('text-red-400');
-            else charCount.classList.remove('text-red-400');
         });
 
-        // ميزة الـ GPS
+        // الـ GPS
         const gpsBtn = document.getElementById('gpsBtn');
         const gpsCoordsInput = document.getElementById('gps_coords');
         const gpsStatus = document.getElementById('gpsStatus');
@@ -144,19 +153,17 @@
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     gpsCoordsInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
-                    gpsBtn.classList.replace('bg-slate-800', 'bg-emerald-500/20');
-                    gpsBtn.classList.replace('text-amber-400', 'text-emerald-400');
-                    gpsBtn.innerHTML = "📍 تم حفظ الموقع";
+                    gpsBtn.innerHTML = "📍 تم حفظ الموقع بنجاح";
                     gpsStatus.classList.remove('hidden');
                 },
                 (error) => {
-                    alert("يرجى تفعيل الـ GPS والسماح للمتصفح بالوصول لموقعك.");
+                    alert("يرجى إعطاء متصفح كروم صلاحية الـ GPS من إعدادات الهاتف كموضّح سابقاً.");
                     gpsBtn.innerHTML = "📍 جلب موقعي الحالي تلقائياً";
                 }
             );
         });
 
-        // إرسال النموذج لقاعدة البيانات
+        // إرسال النموذج وتشغيل تتبع الرادار الحي
         document.getElementById('orderForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -175,7 +182,6 @@
                 let imageUrl = null;
                 const fileInput = document.getElementById('image_file');
                 
-                // رفع الصورة
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     const fileExt = file.name.split('.').pop();
@@ -186,17 +192,12 @@
                         .from('images')
                         .upload(fileName, file);
                         
-                    if (uploadError) {
-                        // تنبيه العميل والمبرمج إذا فشل رفع الصورة بسبب السيرفر
-                        alert("⚠️ تعذر رفع الصورة بسبب إعدادات السيرفر: " + uploadError.message + "\n\nسيتم إرسال الطلب بدون صورة.");
-                        console.error("خطأ رفع الصورة:", uploadError);
-                    } else {
+                    if (!uploadError) {
                         const { data: publicUrlData } = supabaseClient.storage.from('images').getPublicUrl(fileName);
                         imageUrl = publicUrlData.publicUrl;
                     }
                 }
 
-                // إدخال البيانات في جدول orders
                 const orderData = {
                     service_type: document.getElementById('service_type').value,
                     manual_address: document.getElementById('manual_address').value,
@@ -206,21 +207,76 @@
                     status: 'pending'
                 };
 
-                const { error: insertError } = await supabaseClient.from('orders').insert([orderData]);
+                // حفظ الطلب وجلب الـ id الخاص به فوراً للمراقبة الحية
+                const { data: insertedRows, error: insertError } = await supabaseClient
+                    .from('orders')
+                    .insert([orderData])
+                    .select();
 
                 if (insertError) throw insertError;
 
-                // إخفاء النموذج وإظهار شاشة الانتظار للعميل بدون تحديث الصفحة
+                const orderId = insertedRows[0].id;
+                document.getElementById('orderIdDisplay').textContent = `رقم تتبع الطلب السحابي: #KH-${orderId}`;
+
+                // التبديل إلى شاشة التتبع الحية
                 document.getElementById('formContainer').classList.add('hidden');
                 document.getElementById('successScreen').classList.remove('hidden');
 
+                // تشغيل الرادار (Realtime Listener): الاستماع لأي تعديل على هذا الطلب بالتحديد
+                listenToOrderChanges(orderId);
+
             } catch (error) {
                 console.error("خطأ:", error);
-                alert("حدث خطأ أثناء إرسال الطلب: " + error.message);
+                alert("حدث خطأ: " + error.message);
                 submitBtn.classList.remove('hidden');
                 loadingMsg.classList.add('hidden');
             }
         });
+
+        // دالة المراقبة والاستماع الحي لتحديثات الفني
+        function listenToOrderChanges(orderId) {
+            supabaseClient
+                .channel(`order-track-${orderId}`)
+                .on(
+                    'postgres_changes',
+                    { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` },
+                    (payload) => {
+                        const updatedOrder = payload.new;
+                        updateClientUI(updatedOrder.status);
+                    }
+                )
+                .subscribe();
+        }
+
+        // دالة تحديث شاشة العميل تلقائياً بدون تحديث الصفحة
+        function updateClientUI(status) {
+            const emojiEl = document.getElementById('statusEmoji');
+            const badgeEl = document.getElementById('statusBadge');
+            const titleEl = document.getElementById('statusTitle');
+            const descEl = document.getElementById('statusDesc');
+
+            if (status === 'on_the_way') {
+                emojiEl.textContent = "🚗";
+                badgeEl.className = "bg-blue-500 text-white font-black text-xs px-4 py-1.5 rounded-full inline-block animate-pulse";
+                badgeEl.textContent = "الفني في الطريق إليك";
+                titleEl.textContent = "انطلق الفني الآن!";
+                descEl.textContent = "تحديث حي: قبل الفني طلبك وهو يقود الآن باتجاه موقعك الجغرافي المزود. يرجى إبقاء الهاتف متاحاً.";
+            } 
+            else if (status === 'arrived') {
+                emojiEl.textContent = "📍";
+                badgeEl.className = "bg-emerald-500 text-slate-950 font-black text-xs px-4 py-1.5 rounded-full inline-block";
+                badgeEl.textContent = "وصل الفني للموقع";
+                titleEl.textContent = "الفني عند بابك!";
+                descEl.textContent = "تحديث حي: أبلغ الفني النظام بأنه قد وصل إلى موقعك المحدد بنجاح وبدأ في فحص العطل وتجهيز المعدات.";
+            } 
+            else if (status === 'completed') {
+                emojiEl.textContent = "✅";
+                badgeEl.className = "bg-slate-700 text-slate-200 font-black text-xs px-4 py-1.5 rounded-full inline-block";
+                badgeEl.textContent = "مهمة مكتملة";
+                titleEl.textContent = "تم الانتهاء من الصيانة!";
+                descEl.textContent = "تحديث حي: أغلق الفني بلاغ الصيانة بنجاح وتم تصليح العطل. شكراً جزيلاً لاستخدامك منصة خبير.";
+            }
+        }
     </script>
 </body>
 </html>

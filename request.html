@@ -280,7 +280,7 @@
                             const newStatus = payload.new.status;
                             
                             // إذا غيّر الفني الحالة إلى "في الطريق"
-                            if (newStatus === 'in_progress' || newStatus === 'in_the_way') {
+                            if (newStatus !== 'pending') {
                                 mainElement.innerHTML = `
                                     <div class="glass p-10 rounded-2xl border border-emerald-500/50 text-center space-y-6 shadow-2xl">
                                         <div class="mb-4 text-7xl bounce" style="animation: bounce 2s infinite;">🚗</div>

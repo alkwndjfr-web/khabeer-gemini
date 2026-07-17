@@ -6,7 +6,7 @@
     <title>خبير | بوابة تسجيل الدخول الموحدة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght=300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .glass { background: rgba(30, 41, 59, 0.65); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3.5 rounded-xl text-sm transition transform active:scale-[0.98] shadow-lg mt-4">
+            <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3.5 rounded-xl text-sm transition transform active:scale-[0.98] shadow-lg mt-4 disabled:opacity-50 disabled:cursor-not-allowed">
                 تسجيل الدخول 🚀
             </button>
         </form>
@@ -77,11 +77,9 @@
 
         let currentMode = 'login'; 
 
-        // ✨ التحديث الذكي: فحص الجلسة النشطة فور فتح الصفحة لمنع تكرار تسجيل الدخول
         window.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
             if (session && session.user) {
-                // إذا كان مسجلاً للدخول بالفعل، يتم جلب هويته وتوجيهه تلقائياً فوراً
                 const userRole = session.user.user_metadata.role || 'customer';
                 redirectUser(userRole);
             }
@@ -122,6 +120,13 @@
             e.preventDefault();
             hideAlert();
 
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerText;
+
+            // ⚡ تفعيل حالة التحميل وقفل الزر
+            submitBtn.disabled = true;
+            submitBtn.innerText = "جاري التحقق... ⏳";
+
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const fullName = document.getElementById('fullName').value.trim();
@@ -130,6 +135,8 @@
             if (currentMode === 'register') {
                 if(!fullName) {
                     showAlert('الرجاء إدخال اسمك الكامل أولاً', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalBtnText;
                     return;
                 }
                 
@@ -146,6 +153,8 @@
 
                 if (error) {
                     showAlert(error.message, 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalBtnText;
                 } else {
                     showAlert('تم إنشاء الحساب بنجاح! جاري توجيهك...', 'success');
                     setTimeout(() => redirectUser(role), 1500);
@@ -159,6 +168,8 @@
 
                 if (error) {
                     showAlert('خطأ في البريد الإلكتروني أو كلمة المرور', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalBtnText;
                 } else {
                     const userRole = data.user.user_metadata.role || 'customer';
                     showAlert('تم تسجيل الدخول بنجاح! مرحباً بك', 'success');
@@ -167,12 +178,11 @@
             }
         }
 
-        // ✨ التحديث الذكي: توجيه الزبون إلى صفحة طلب الخدمة بدلاً من الرئيسية العامة
         function redirectUser(role) {
             if (role === 'technician') {
                 window.location.href = 'tech.html';
             } else {
-                window.location.href = 'request.html'; // تم تعديلها لتفتح شاشة الخدمة والتحكم مباشرة للزبون
+                window.location.href = 'request.html'; 
             }
         }
 

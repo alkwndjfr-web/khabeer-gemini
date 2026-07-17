@@ -71,14 +71,22 @@
     </div>
 
     <script>
-        // إعدادات اتصال Supabase المتطابقة مع مشروعك الحالي
         const SUPABASE_URL = "https://nzwhrbaxhygivduwmria.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_-0A6mi2LDboRsW2MYRBb1A_I5q1Jikw"; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let currentMode = 'login'; // الوضع الافتراضي
+        let currentMode = 'login'; 
 
-        // التبديل بين تسجيل الدخول وإنشاء الحساب
+        // ✨ التحديث الذكي: فحص الجلسة النشطة فور فتح الصفحة لمنع تكرار تسجيل الدخول
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session && session.user) {
+                // إذا كان مسجلاً للدخول بالفعل، يتم جلب هويته وتوجيهه تلقائياً فوراً
+                const userRole = session.user.user_metadata.role || 'customer';
+                redirectUser(userRole);
+            }
+        });
+
         function switchForm(mode) {
             currentMode = mode;
             const nameField = document.getElementById('nameField');
@@ -89,7 +97,6 @@
             const toggleLoginBtn = document.getElementById('toggleLoginBtn');
             const toggleRegisterBtn = document.getElementById('toggleRegisterBtn');
 
-            // تفريغ الرسائل السابقة
             hideAlert();
 
             if (mode === 'register') {
@@ -111,7 +118,6 @@
             }
         }
 
-        // معالجة الضغط على أزرار الدخول والتسجيل
         async function handleAuth(e) {
             e.preventDefault();
             hideAlert();
@@ -127,7 +133,6 @@
                     return;
                 }
                 
-                // عملية إنشاء حساب جديد
                 const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: password,
@@ -147,7 +152,6 @@
                 }
 
             } else {
-                // عملية تسجيل الدخول لحساب موجود
                 const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
@@ -156,7 +160,6 @@
                 if (error) {
                     showAlert('خطأ في البريد الإلكتروني أو كلمة المرور', 'error');
                 } else {
-                    // جلب نوع الحساب من الميتادات الخاصة بالمستخدم المـُسجل
                     const userRole = data.user.user_metadata.role || 'customer';
                     showAlert('تم تسجيل الدخول بنجاح! مرحباً بك', 'success');
                     setTimeout(() => redirectUser(userRole), 1500);
@@ -164,16 +167,15 @@
             }
         }
 
-        // توجيه المستخدم حسب نوعه وعمله
+        // ✨ التحديث الذكي: توجيه الزبون إلى صفحة طلب الخدمة بدلاً من الرئيسية العامة
         function redirectUser(role) {
             if (role === 'technician') {
                 window.location.href = 'tech.html';
             } else {
-                window.location.href = 'index.html'; // أو لوحة الزبون المستقبلية
+                window.location.href = 'request.html'; // تم تعديلها لتفتح شاشة الخدمة والتحكم مباشرة للزبون
             }
         }
 
-        // دالات إظهار وإخفاء التنبيهات
         function showAlert(msg, type) {
             const alert = document.getElementById('alertMsg');
             alert.innerText = msg;

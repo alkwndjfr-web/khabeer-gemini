@@ -22,25 +22,21 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <nav class="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center shadow-lg">
+    <!-- شريط التنقل المعدل ليتناسب مع الهواتف -->
+    <nav class="glass sticky top-0 z-50 px-4 py-4 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
         <div class="flex items-center gap-3">
             <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
             <span class="text-xs bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-full font-bold">بوابة الفني 🔧</span>
         </div>
-        <div class="hidden md:flex gap-6 items-center text-sm font-medium">
+        <div class="flex flex-wrap justify-center gap-3 md:gap-6 items-center text-xs md:text-sm font-medium">
             <a href="index.html" class="hover:text-amber-400 transition">الرئيسية</a>
-            <a href="pricing.html" class="hover:text-amber-400 transition">الباقات والاشتراكات</a>
             <a href="request.html" class="hover:text-amber-400 transition">طلب خدمة</a>
-            <a href="dashboard.html" class="hover:text-amber-400 transition">لوحة العميل</a>
-            <a href="tech.html" class="text-amber-400 hover:text-amber-300 transition">لوحة الفني</a>
-            <a href="admin.html" class="hover:text-amber-400 transition">لوحة الإدارة</a>
-        </div>
-        <div>
-            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-3 py-1.5 rounded-lg text-xs">أحمد الكهربائي (متصل)</span>
+            <a href="tech.html" class="text-amber-400 hover:text-amber-300 transition border border-amber-500/30 px-3 py-1 rounded-lg">لوحة الفني</a>
+            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-3 py-1.5 rounded-lg text-[10px] md:text-xs">أحمد (متصل)</span>
         </div>
     </nav>
 
-    <main class="container mx-auto px-6 py-12 max-w-2xl space-y-8">
+    <main class="container mx-auto px-4 py-8 md:py-12 max-w-2xl space-y-8">
         <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 space-y-2">
             <h1 class="text-2xl font-black">قائمة المهام اليومية 📋</h1>
             <p class="text-xs text-slate-400">يتم جلب طلبات العمل مباشرة من السيرفر السحابي حياً ومباشرة.</p>
@@ -54,27 +50,21 @@
     </main>
 
     <script>
-        // ------------------------------------------------------------
-        // ⚠️ ضع مفاتيحك السحابية هنا (يجب أن تطابق المفاتيح في صفحة الطلب)
-        // ------------------------------------------------------------
         const SUPABASE_URL = "https://nzwhrbaxhygivduwmria.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_-0A6mi2LDboRsW2MYRBb1A_I5q1Jikw"; 
-
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         window.addEventListener('DOMContentLoaded', fetchActiveOrders);
 
-        // دالة لجلب الطلبات الحقيقية من السيرفر
         async function fetchActiveOrders() {
             const container = document.getElementById('tech-tasks-container');
             
             try {
-                // جلب آخر 5 طلبات تم تسجيلها من العملاء
                 const { data: orders, error } = await supabaseClient
                     .from('orders')
                     .select('*')
                     .order('id', { ascending: false })
-                    .limit(5);
+                    .limit(10);
 
                 if (error) throw error;
 
@@ -86,15 +76,12 @@
                     return;
                 }
 
-                // مسح رسالة التحميل
                 container.innerHTML = "";
 
-                // بناء الكروت للطلبات السحابية الحقيقية
                 orders.forEach(order => {
                     const orderCard = document.createElement('div');
-                    orderCard.className = "glass p-6 rounded-2xl border-2 border-slate-800 space-y-4 hover:border-amber-500/30 transition duration-300";
+                    orderCard.className = "glass p-4 md:p-6 rounded-2xl border-2 border-slate-800 space-y-4 hover:border-amber-500/30 transition duration-300";
                     
-                    // تحديد اللون المناسب للحالة
                     let statusBadge = `<span class="bg-amber-500 text-slate-950 font-bold text-[10px] px-2.5 py-1 rounded-full">قيد الانتظار ⏳</span>`;
                     if (order.status === 'on_the_way') {
                         statusBadge = `<span class="bg-blue-500 text-white font-bold text-[10px] px-2.5 py-1 rounded-full">في الطريق 🚗</span>`;
@@ -104,17 +91,14 @@
                         statusBadge = `<span class="bg-slate-700 text-slate-300 font-bold text-[10px] px-2.5 py-1 rounded-full">مكتمل ✓</span>`;
                     }
 
-                    // التحقق من وجود الصورة
-                    let imageSection = `
-                        <p class="text-xs text-slate-500 italic py-1">لم يقم العميل بإرفاق أي صورة لهذا الطلب.</p>
-                    `;
+                    let imageSection = `<p class="text-xs text-slate-500 italic py-1">لم يقم العميل بإرفاق أي صورة لهذا الطلب.</p>`;
                     if (order.image_url) {
                         imageSection = `
                             <div class="relative overflow-hidden rounded-lg border border-slate-800 bg-slate-900">
-                                <img src="${order.image_url}" alt="صورة العطل المرفوعة من العميل" class="w-full max-h-60 object-cover">
+                                <img src="${order.image_url}" alt="صورة العطل" class="w-full max-h-60 object-cover">
                             </div>
                             <a href="${order.image_url}" target="_blank" class="block text-center text-xs text-amber-500 hover:text-amber-400 hover:underline">
-                                🔍 فتح الصورة بحجمها الكامل في نافذة جديدة
+                                🔍 فتح الصورة بحجمها الكامل
                             </a>
                         `;
                     }
@@ -124,33 +108,26 @@
                             ${statusBadge}
                             <span class="text-xs text-slate-400">طلب رقم: #KH-${order.id}</span>
                         </div>
-                        
                         <hr class="border-slate-800">
-
                         <div class="space-y-2 text-sm">
                             <p>• <strong>نوع الخدمة:</strong> ${order.service_type}</p>
                             <p>• <strong>العنوان:</strong> ${order.manual_address}</p>
                             <p>• <strong>وصف العطل:</strong> ${order.problem_desc}</p>
                         </div>
-
-                        <div class="border border-slate-800 bg-slate-950/40 p-4 rounded-xl space-y-2">
+                        <div class="border border-slate-800 bg-slate-950/40 p-3 md:p-4 rounded-xl space-y-2">
                             <p class="text-xs font-bold text-amber-400 flex items-center gap-1.5">📷 صورة العطل المرفقة:</p>
                             ${imageSection}
                         </div>
-
                         <div class="grid grid-cols-2 gap-2 pt-2">
-                            <a href="https://wa.me/9647715480994" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-100 py-2.5 text-xs font-bold rounded-xl text-center">💬 إبلاغ الإدارة</a>
-                            <a href="${order.gps_coords}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-amber-400 py-2.5 text-xs font-bold rounded-xl text-center flex items-center justify-center gap-1">📍 فتح الـ GPS</a>
+                            <a href="${order.gps_coords}" target="_blank" class="col-span-2 bg-slate-800 hover:bg-slate-700 text-amber-400 py-3 text-sm font-bold rounded-xl text-center flex items-center justify-center gap-1">📍 فتح موقع العميل (GPS)</a>
                         </div>
-
                         <hr class="border-slate-800">
-
                         <div class="space-y-3">
-                            <p class="text-xs font-bold text-slate-300">تحديث حالة المهمة في السيرفر السحابي:</p>
+                            <p class="text-xs font-bold text-slate-300">تحديث حالة المهمة:</p>
                             <div class="grid grid-cols-3 gap-2">
-                                <button onclick="updateStatus(${order.id}, 'on_the_way')" class="bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-300 text-[10px] font-bold py-2 rounded-lg transition">في الطريق 🚗</button>
-                                <button onclick="updateStatus(${order.id}, 'arrived')" class="bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-300 text-[10px] font-bold py-2 rounded-lg transition">وصلت 📍</button>
-                                <button onclick="updateStatus(${order.id}, 'completed')" class="bg-slate-800 hover:bg-blue-600 hover:text-white text-slate-300 text-[10px] font-bold py-2 rounded-lg transition">اكتمل العمل ✓</button>
+                                <button onclick="updateStatus(${order.id}, 'on_the_way')" class="bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-300 text-[10px] md:text-xs font-bold py-2 rounded-lg transition">في الطريق 🚗</button>
+                                <button onclick="updateStatus(${order.id}, 'arrived')" class="bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-300 text-[10px] md:text-xs font-bold py-2 rounded-lg transition">وصلت 📍</button>
+                                <button onclick="updateStatus(${order.id}, 'completed')" class="bg-slate-800 hover:bg-blue-600 hover:text-white text-slate-300 text-[10px] md:text-xs font-bold py-2 rounded-lg transition">اكتمل العمل ✓</button>
                             </div>
                         </div>
                     `;
@@ -159,37 +136,20 @@
                 });
 
             } catch (error) {
-                console.error("خطأ أثناء جلب الطلبات من Supabase:", error);
-                container.innerHTML = `
-                    <div class="glass p-8 text-center rounded-2xl border border-red-500/20 text-red-400">
-                        ⚠️ فشل جلب البيانات من السيرفر السحابي. يرجى التأكد من المفاتيح أو إعدادات الإنترنت.
-                    </div>`;
+                console.error("خطأ:", error);
+                container.innerHTML = `<div class="glass p-8 text-center rounded-2xl border border-red-500/20 text-red-400">⚠️ فشل جلب البيانات من السيرفر.</div>`;
             }
         }
 
-        // دالة تحديث الحالة وتعديلها حقيقياً بداخل قاعدة البيانات السحابية
         async function updateStatus(orderId, newState) {
             try {
-                const { error } = await supabaseClient
-                    .from('orders')
-                    .update({ status: newState })
-                    .eq('id', orderId);
-
+                const { error } = await supabaseClient.from('orders').update({ status: newState }).eq('id', orderId);
                 if (error) throw error;
-
-                alert("تم تحديث حالة الطلب بنجاح على السيرفر! مزامنة البيانات... 🔄");
-                fetchActiveOrders(); // إعادة جلب البيانات فوراً ليعاد بناء الكروت بالحالة الجديدة
+                fetchActiveOrders(); 
             } catch (error) {
-                console.error("فشل تحديث الحالة:", error);
                 alert("فشل التحديث في السيرفر السحابي.");
             }
         }
     </script>
-
-    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12 mt-12">
-        <div class="text-center text-xs text-slate-600">
-            جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.
-        </div>
-    </footer>
 </body>
 </html>

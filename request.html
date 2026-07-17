@@ -14,7 +14,6 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- شريط التنقل المتجاوب -->
     <nav class="glass sticky top-0 z-50 px-4 py-4 flex flex-col sm:flex-row justify-between items-center shadow-lg gap-4 bg-slate-900/80 border-b border-slate-800">
         <div class="flex items-center justify-between w-full sm:w-auto px-2">
             <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
@@ -30,7 +29,6 @@
 
     <main class="container mx-auto px-4 py-8 md:py-12 max-w-xl space-y-8">
         
-        <!-- شاشة الانتظار والعداد التنازلي المباشر -->
         <div id="successScreen" class="hidden glass p-8 rounded-2xl border border-amber-500/30 text-center space-y-6 shadow-2xl">
             <div id="statusEmoji" class="text-7xl animate-bounce">⏳</div>
             
@@ -41,9 +39,8 @@
                 <h2 id="statusTitle" class="text-2xl font-black text-slate-100 pt-2">تم إرسال طلبك بنجاح!</h2>
             </div>
 
-            <!-- صندوق العداد التنازلي -->
             <div id="countdownBox" class="hidden bg-slate-950/80 border-2 border-blue-500/40 p-5 rounded-2xl max-w-xs mx-auto space-y-2 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                <p class="text-xs text-blue-400 font-black">⏱️ الوقت المتوقع لوصول الفني:</p>
+                <p class="text-xs text-blue-400 font-black">⏱️ الوقت المتبقي لوصول الفني لموقعك:</p>
                 <p id="countdownTimer" class="text-4xl font-black text-blue-500 font-mono tracking-wider">00:00</p>
             </div>
 
@@ -51,62 +48,111 @@
                 طلبك الآن معروض على شاشات الفنيين في الميدان. يرجى الانتظار، سيقوم أحد الفنيين بقبول الطلب والتحرك فوراً.
             </p>
 
+            <div id="orderImagePreviewContainer" class="hidden space-y-2 pt-2 border-t border-slate-800/60">
+                <p class="text-xs text-slate-400 font-bold">الصورة التي أرفقتها للعطل (اضغط عليها لتكبيرها 🔍):</p>
+                <img id="clientOrderImage" src="" class="w-full max-h-48 object-cover rounded-xl border border-slate-700 cursor-pointer hover:opacity-90 transition">
+            </div>
+
             <div class="border-t border-slate-800 pt-4 space-y-3">
-                <p id="orderIdDisplay" class="text-xs text-slate-500 font-mono">رقم تتبع الطلب: #KH-0</p>
-                <button onclick="location.reload()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs py-3 rounded-xl transition">
-                    تقديم بلاغ صيانة جديد 🔄
+                <p id="orderIdDisplay" class="text-xs text-slate-500 font-mono">رقم تتبع الطلب السحابي: #KH-0</p>
+                <button onclick="clearActiveOrder()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs py-3 rounded-xl transition">
+                    تقديم بلاغ صيانة جديد أو طلب آخر 🔄
                 </button>
             </div>
         </div>
 
-        <!-- نموذج تقديم الطلب -->
         <div id="formContainer">
             <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 text-center mb-6">
                 <h1 class="text-2xl font-black">أرسل طلب صيانة جديد 🚀</h1>
+                <p class="text-xs text-slate-400">سيتم بث طلبك مباشرة في لوحة الفنيين القريبين منك.</p>
             </div>
 
             <form id="orderForm" class="glass p-6 md:p-8 rounded-2xl border border-slate-800 space-y-6">
                 <div class="space-y-2">
                     <label class="text-sm font-bold text-slate-300">نوع الخدمة المطلوبة</label>
-                    <select id="service_type" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-500 outline-none">
+                    <select id="service_type" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-500 outline-none transition">
                         <option value="تكييف">تكييف وتبريد ❄️</option>
                         <option value="كهرباء">صيانة كهرباء ⚡</option>
                         <option value="سباكة">سباكة ومياه 🚰</option>
                         <option value="أخرى">أخرى 🛠️</option>
                     </select>
                 </div>
+                
                 <div class="space-y-2">
                     <label class="text-sm font-bold text-slate-300">العنوان بالتفصيل</label>
-                    <input type="text" id="manual_address" required placeholder="المدينة، الحي، رقم الدار..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-500 outline-none">
+                    <input type="text" id="manual_address" required placeholder="المنطقة، الحي، رقم الزقاق أو الدار..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-amber-500 outline-none transition">
                 </div>
+                
                 <div class="space-y-2">
-                    <label class="text-sm font-bold text-slate-300">وصف العطل بدقة</label>
-                    <textarea id="problem_desc" required maxlength="200" rows="3" placeholder="اشرح المشكلة..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white resize-none focus:border-amber-500 outline-none"></textarea>
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-bold text-slate-300">وصف العطل بدقة</label>
+                        <span id="charCount" class="text-xs text-slate-500 font-mono">0 / 200</span>
+                    </div>
+                    <textarea id="problem_desc" required maxlength="200" rows="3" placeholder="اشرح المشكلة باختصار للفني..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white resize-none focus:border-amber-500 outline-none transition"></textarea>
                 </div>
+                
                 <div class="space-y-2">
-                    <button type="button" id="gpsBtn" class="w-full bg-slate-800 hover:bg-slate-700 transition border border-slate-700 text-amber-400 font-bold rounded-xl px-4 py-3 text-sm">📍 جلب موقعي الحالي تلقائياً</button>
+                    <button type="button" id="gpsBtn" class="w-full bg-slate-800 hover:bg-slate-700 transition border border-slate-700 text-amber-400 font-bold rounded-xl px-4 py-3 text-sm flex items-center justify-center gap-2">
+                        <span>📍 جلب موقعي الحالي تلقائياً</span>
+                    </button>
                     <input type="hidden" id="gps_coords" required>
                 </div>
+                
                 <div class="space-y-2">
                     <label class="text-sm font-bold text-slate-300">إرفاق صورة للعطل (اختياري)</label>
-                    <input type="file" id="image_file" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white cursor-pointer file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950">
+                    <input type="file" id="image_file" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white cursor-pointer file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 transition">
                 </div>
                 
                 <button type="submit" id="submitBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-lg rounded-xl px-4 py-4 shadow-lg transition">إرسال الطلب للفنيين الآن 🚀</button>
-                <p id="loadingMsg" class="text-center text-amber-400 text-sm hidden font-bold animate-pulse">جاري تأمين الاتصال ورفع الطلب... ⏳</p>
+                <p id="loadingMsg" class="text-center text-amber-400 text-sm hidden font-bold animate-pulse">جاري رفع البيانات وتأمين الاتصال السحابي... ⏳</p>
             </form>
         </div>
     </main>
 
+    <div id="imageModal" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
+        <button onclick="closeImageModal()" class="absolute top-6 right-6 text-white text-3xl font-bold bg-slate-800/85 w-12 h-12 rounded-full flex items-center justify-center hover:bg-slate-700 transition">&times;</button>
+        <img id="modalImg" src="" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+    </div>
+
     <script>
-        // إعدادات قاعدة البيانات Supabase
         const SUPABASE_URL = "https://nzwhrbaxhygivduwmria.supabase.co"; 
         const SUPABASE_ANON_KEY = "sb_publishable_-0A6mi2LDboRsW2MYRBb1A_I5q1Jikw"; 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let countdownInterval = null; 
 
-        // تفعيل الـ GPS
+        // تشغيل الوظائف الأساسية وفحص وجود جلسة مفتوحة عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', async () => {
+            // عداد الحروف للوصف
+            const problemDesc = document.getElementById('problem_desc');
+            const charCount = document.getElementById('charCount');
+            problemDesc.addEventListener('input', function() {
+                charCount.textContent = `${this.value.length} / 200`;
+            });
+
+            // تفقد الـ LocalStorage إذا كان العميل يمتلك طلباً معلقاً لفتح شاشة التتبع فوراً حتى لو أغلق المتصفح
+            const activeOrderId = localStorage.getItem('active_order_id');
+            if (activeOrderId) {
+                document.getElementById('formContainer').classList.add('hidden');
+                document.getElementById('successScreen').classList.remove('hidden');
+                document.getElementById('orderIdDisplay').textContent = `رقم تتبع الطلب السحابي: #KH-${activeOrderId}`;
+                
+                // جلب بيانات العطل والصورة الحالية من السيرفر لضمان المزامنة الدقيقة
+                try {
+                    const { data, error } = await supabaseClient.from('orders').select('*').eq('id', activeOrderId).single();
+                    if (!error && data) {
+                        if (data.image_url) {
+                            showPreviewImage(data.image_url);
+                        }
+                        updateClientUI(data.status, activeOrderId);
+                    }
+                } catch (e) { console.error(e); }
+                
+                listenToOrderChanges(activeOrderId);
+            }
+        });
+
+        // جلب موقع الـ GPS
         const gpsBtn = document.getElementById('gpsBtn');
         const gpsCoordsInput = document.getElementById('gps_coords');
         gpsBtn.addEventListener('click', () => {
@@ -115,11 +161,11 @@
                 gpsBtn.innerHTML = "📍 تم حفظ الموقع بنجاح ✓";
                 gpsBtn.className = "w-full bg-emerald-500/20 border border-emerald-500 text-emerald-400 font-bold rounded-xl px-4 py-3 text-sm transition";
             }, () => {
-                alert("يرجى إعطاء متصفحك صلاحية تحديد الموقع.");
+                alert("يرجى تفعيل صلاحية الـ GPS للموقع الإلكتروني في إعدادات الهاتف.");
             });
         });
 
-        // إرسال الطلب
+        // إرسال النموذج وحفظ المعرف محلياً
         document.getElementById('orderForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!gpsCoordsInput.value) { alert("يرجى الضغط على زر تحديد الموقع أولاً."); return; }
@@ -151,99 +197,152 @@
                 if (error) throw error;
 
                 const orderId = rows[0].id;
-                document.getElementById('orderIdDisplay').textContent = `رقم تتبع الطلب: #KH-${orderId}`;
+                
+                // حفظ رقم الطلب في ذاكرة المتصفح لعدم ضياع التتبع
+                localStorage.setItem('active_order_id', orderId);
+
+                if (imageUrl) {
+                    showPreviewImage(imageUrl);
+                }
+
+                document.getElementById('orderIdDisplay').textContent = `رقم تتبع الطلب السحابي: #KH-${orderId}`;
                 document.getElementById('formContainer').classList.add('hidden');
                 document.getElementById('successScreen').classList.remove('hidden');
 
-                // بدء التنصت على التحديثات
                 listenToOrderChanges(orderId);
 
             } catch (err) { 
-                alert("حدث خطأ: " + err.message); 
+                alert("حدث خطأ أثناء الإرسال: " + err.message); 
                 document.getElementById('submitBtn').classList.remove('hidden');
                 document.getElementById('loadingMsg').classList.add('hidden');
             }
         });
 
-        // دالة المراقبة الحية
+        // الاستماع المباشر للبث الحي من الفني
         function listenToOrderChanges(orderId) {
             supabaseClient.channel(`order-track-${orderId}`).on('postgres_changes', { 
                 event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` 
             }, (payload) => {
-                updateClientUI(payload.new.status);
+                updateClientUI(payload.new.status, orderId);
             }).subscribe();
         }
 
-        // تحديث واجهة العميل والعداد
-        function updateClientUI(status) {
+        // تحديث واجهة تتبع المستخدم بناءً على الحالات الحية
+        function updateClientUI(status, orderId) {
             const emojiEl = document.getElementById('statusEmoji');
             const badgeEl = document.getElementById('statusBadge');
             const titleEl = document.getElementById('statusTitle');
             const descEl = document.getElementById('statusDesc');
             const countdownBox = document.getElementById('countdownBox');
 
-            // إذا كانت الحالة تحتوي على كلمة "في الطريق" بأي وقت كان
             if (status.includes('on_the_way')) {
-                clearInterval(countdownInterval); // إيقاف أي عداد سابق
+                clearInterval(countdownInterval); 
                 
-                // استخراج الرقم من النص بدقة (30 أو 60 أو 90)
-                let minutes = 30; // افتراضي
+                // استخراج الدقائق المختارة من كود الفني (30 أو 60 أو 90)
+                let minutes = 30; 
                 const match = status.match(/\d+/); 
-                if (match) {
-                    minutes = parseInt(match[0]);
-                }
+                if (match) minutes = parseInt(match[0]);
                 
                 emojiEl.textContent = "🚗";
                 badgeEl.className = "bg-blue-500 text-white font-black text-xs px-4 py-1.5 rounded-full inline-block animate-pulse";
                 badgeEl.textContent = "الفني في الطريق إليك";
                 titleEl.textContent = "انطلق الفني الآن!";
-                descEl.textContent = "تحديث حي: تم قبول طلبك. الفني يقود الآن باتجاه موقعك الجغرافي المزود، يرجى إبقاء الهاتف متاحاً.";
+                descEl.textContent = `تحديث حي: قبل الفني طلبك وحدد الوقت المتوقع للوصول. يقود الفني الآن باتجاه موقعك الـ GPS.`;
                 
-                // إظهار صندوق العداد وتشغيله
                 countdownBox.classList.remove('hidden'); 
-                startTimer(minutes * 60); 
+                
+                // إدارة الوقت عبر الساعة الحقيقية ليعمل بالخلفية
+                let targetTimestamp = localStorage.getItem(`order_${orderId}_target`);
+                if (!targetTimestamp) {
+                    targetTimestamp = Date.now() + minutes * 60 * 1000;
+                    localStorage.setItem(`order_${orderId}_target`, targetTimestamp);
+                } else {
+                    targetTimestamp = parseInt(targetTimestamp);
+                }
+                
+                startTimer(targetTimestamp); 
             } 
             else if (status === 'arrived') {
                 clearInterval(countdownInterval);
-                countdownBox.classList.add('hidden'); // إخفاء العداد
+                countdownBox.classList.add('hidden'); 
                 
                 emojiEl.textContent = "📍";
                 badgeEl.className = "bg-emerald-500 text-slate-950 font-black text-xs px-4 py-1.5 rounded-full inline-block";
                 badgeEl.textContent = "وصل الفني للموقع";
                 titleEl.textContent = "الفني عند بابك!";
-                descEl.textContent = "تحديث حي: أبلغ الفني النظام بأنه قد وصل إلى موقعك المحدد بنجاح وبدأ الفحص.";
+                descEl.textContent = "تحديث حي: أبلغ الفني النظام بأنه قد وصل إلى موقعك المحدد بنجاح وبدأ في صيانة وفحص العطل.";
             } 
             else if (status === 'completed') {
                 clearInterval(countdownInterval);
                 countdownBox.classList.add('hidden');
                 
+                // تنظيف الذاكرة المحلية لأن الطلب تم بنجاح واكتمل
+                localStorage.removeItem(`order_${orderId}_target`);
+                localStorage.removeItem('active_order_id');
+                
                 emojiEl.textContent = "✅";
                 badgeEl.className = "bg-slate-700 text-slate-200 font-black text-xs px-4 py-1.5 rounded-full inline-block";
                 badgeEl.textContent = "مهمة مكتملة";
                 titleEl.textContent = "تم الانتهاء من الصيانة!";
-                descEl.textContent = "تم إغلاق البلاغ بنجاح. شكراً جزيلاً لثقتك بمنصة خبير للصيانة.";
+                descEl.textContent = "تم إغلاق البلاغ بنجاح وتصليح العطل بالكامل. شكراً جزيلاً لثقتك بمنصة خبير.";
             }
         }
 
-        // دالة العداد التنازلي المحدثة والدقيقة
-        function startTimer(durationInSeconds) {
-            let timer = durationInSeconds;
+        // دالة العداد التنازلي المعتمدة على الوقت الحقيقي للعالم (مقاومة للإغلاق والخلفية)
+        function startTimer(targetTimestamp) {
             const display = document.getElementById('countdownTimer');
             
-            countdownInterval = setInterval(() => {
-                let minutes = parseInt(timer / 60, 10);
-                let seconds = parseInt(timer % 60, 10);
-
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                display.textContent = minutes + ":" + seconds;
-
-                if (--timer < 0) {
+            function calculateTime() {
+                const now = Date.now();
+                const diff = targetTimestamp - now;
+                
+                if (diff <= 0) {
                     clearInterval(countdownInterval);
                     display.textContent = "قريب جداً 🚗";
+                    return;
                 }
-            }, 1000);
+                
+                let minutes = Math.floor(diff / (1000 * 60));
+                let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                
+                display.textContent = `${minutes}:${seconds}`;
+            }
+            
+            calculateTime(); 
+            countdownInterval = setInterval(calculateTime, 1000);
+        }
+
+        // وظائف إدارة الصورة المنبثقة والتكبير
+        function showPreviewImage(url) {
+            const imgContainer = document.getElementById('orderImagePreviewContainer');
+            const imgEl = document.getElementById('clientOrderImage');
+            imgEl.src = url;
+            imgContainer.classList.remove('hidden');
+            imgEl.onclick = () => openImageModal(url);
+        }
+
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            modalImg.src = src;
+            modal.classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+
+        // دالة تنظيف الجلسة لتقديم طلب جديد
+        function clearActiveOrder() {
+            const activeOrderId = localStorage.getItem('active_order_id');
+            if(activeOrderId) {
+                localStorage.removeItem(`order_${activeOrderId}_target`);
+            }
+            localStorage.removeItem('active_order_id');
+            location.reload();
         }
     </script>
 </body>

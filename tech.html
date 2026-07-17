@@ -8,21 +8,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-        }
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- شريط التنقل المعدل ليتناسب مع الهواتف -->
     <nav class="glass sticky top-0 z-50 px-4 py-4 flex flex-col md:flex-row justify-between items-center shadow-lg gap-4">
         <div class="flex items-center gap-3">
             <span class="text-2xl font-black text-amber-500">خبير | Khabeer</span>
@@ -32,20 +23,16 @@
             <a href="index.html" class="hover:text-amber-400 transition">الرئيسية</a>
             <a href="request.html" class="hover:text-amber-400 transition">طلب خدمة</a>
             <a href="tech.html" class="text-amber-400 hover:text-amber-300 transition border border-amber-500/30 px-3 py-1 rounded-lg">لوحة الفني</a>
-            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-3 py-1.5 rounded-lg text-[10px] md:text-xs">أحمد (متصل)</span>
         </div>
     </nav>
 
     <main class="container mx-auto px-4 py-8 md:py-12 max-w-2xl space-y-8">
         <div class="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 space-y-2">
             <h1 class="text-2xl font-black">قائمة المهام اليومية 📋</h1>
-            <p class="text-xs text-slate-400">يتم جلب طلبات العمل مباشرة من السيرفر السحابي حياً ومباشرة.</p>
         </div>
 
         <div id="tech-tasks-container" class="space-y-6">
-            <div id="loading-msg" class="text-center py-10 text-slate-400 animate-pulse">
-                جاري الاتصال بقاعدة البيانات السحابية وجلب المهام... ⏳
-            </div>
+            <div id="loading-msg" class="text-center py-10 text-slate-400 animate-pulse">جاري جلب المهام الحية... ⏳</div>
         </div>
     </main>
 
@@ -58,87 +45,64 @@
 
         async function fetchActiveOrders() {
             const container = document.getElementById('tech-tasks-container');
-            
             try {
-                const { data: orders, error } = await supabaseClient
-                    .from('orders')
-                    .select('*')
-                    .order('id', { ascending: false })
-                    .limit(10);
-
+                const { data: orders, error } = await supabaseClient.from('orders').select('*').order('id', { ascending: false }).limit(10);
                 if (error) throw error;
-
                 if (!orders || orders.length === 0) {
-                    container.innerHTML = `
-                        <div class="glass p-8 text-center rounded-2xl border border-slate-800 text-slate-400 italic">
-                            📭 لا توجد مهام أو طلبات مسجلة حالياً في قاعدة البيانات.
-                        </div>`;
+                    container.innerHTML = `<div class="glass p-8 text-center rounded-2xl border border-slate-800 text-slate-400 italic">📭 لا توجد مهام حالياً.</div>`;
                     return;
                 }
-
                 container.innerHTML = "";
 
                 orders.forEach(order => {
                     const orderCard = document.createElement('div');
-                    orderCard.className = "glass p-4 md:p-6 rounded-2xl border-2 border-slate-800 space-y-4 hover:border-amber-500/30 transition duration-300";
+                    orderCard.className = "glass p-4 md:p-6 rounded-2xl border-2 border-slate-800 space-y-4";
                     
-                    let statusBadge = `<span class="bg-amber-500 text-slate-950 font-bold text-[10px] px-2.5 py-1 rounded-full">قيد الانتظار ⏳</span>`;
-                    if (order.status === 'on_the_way') {
-                        statusBadge = `<span class="bg-blue-500 text-white font-bold text-[10px] px-2.5 py-1 rounded-full">في الطريق 🚗</span>`;
-                    } else if (order.status === 'arrived') {
-                        statusBadge = `<span class="bg-emerald-500 text-slate-950 font-bold text-[10px] px-2.5 py-1 rounded-full">وصل الموقع 📍</span>`;
-                    } else if (order.status === 'completed') {
-                        statusBadge = `<span class="bg-slate-700 text-slate-300 font-bold text-[10px] px-2.5 py-1 rounded-full">مكتمل ✓</span>`;
-                    }
-
-                    let imageSection = `<p class="text-xs text-slate-500 italic py-1">لم يقم العميل بإرفاق أي صورة لهذا الطلب.</p>`;
-                    if (order.image_url) {
-                        imageSection = `
-                            <div class="relative overflow-hidden rounded-lg border border-slate-800 bg-slate-900">
-                                <img src="${order.image_url}" alt="صورة العطل" class="w-full max-h-60 object-cover">
-                            </div>
-                            <a href="${order.image_url}" target="_blank" class="block text-center text-xs text-amber-500 hover:text-amber-400 hover:underline">
-                                🔍 فتح الصورة بحجمها الكامل
-                            </a>
-                        `;
-                    }
+                    let statusText = "قيد الانتظار ⏳";
+                    if (order.status.startsWith('on_the_way')) statusText = `في الطريق 🚗 (${order.status.split('_')[3]} دقيقة)`;
+                    if (order.status === 'arrived') statusText = "وصل الموقع 📍";
+                    if (order.status === 'completed') statusText = "مكتمل ✓";
 
                     orderCard.innerHTML = `
                         <div class="flex justify-between items-center">
-                            ${statusBadge}
+                            <span class="bg-amber-500 text-slate-950 font-bold text-xs px-2.5 py-1 rounded-full">${statusText}</span>
                             <span class="text-xs text-slate-400">طلب رقم: #KH-${order.id}</span>
                         </div>
-                        <hr class="border-slate-800">
-                        <div class="space-y-2 text-sm">
-                            <p>• <strong>نوع الخدمة:</strong> ${order.service_type}</p>
+                        <div class="space-y-1 text-sm pt-2">
+                            <p>• <strong>الخدمة:</strong> ${order.service_type}</p>
                             <p>• <strong>العنوان:</strong> ${order.manual_address}</p>
-                            <p>• <strong>وصف العطل:</strong> ${order.problem_desc}</p>
+                            <p>• <strong>العطل:</strong> ${order.problem_desc}</p>
                         </div>
-                        <div class="border border-slate-800 bg-slate-950/40 p-3 md:p-4 rounded-xl space-y-2">
-                            <p class="text-xs font-bold text-amber-400 flex items-center gap-1.5">📷 صورة العطل المرفقة:</p>
-                            ${imageSection}
-                        </div>
-                        <div class="grid grid-cols-2 gap-2 pt-2">
-                            <a href="${order.gps_coords}" target="_blank" class="col-span-2 bg-slate-800 hover:bg-slate-700 text-amber-400 py-3 text-sm font-bold rounded-xl text-center flex items-center justify-center gap-1">📍 فتح موقع العميل (GPS)</a>
-                        </div>
-                        <hr class="border-slate-800">
-                        <div class="space-y-3">
-                            <p class="text-xs font-bold text-slate-300">تحديث حالة المهمة:</p>
+                        ${order.image_url ? `<img src="${order.image_url}" class="w-full max-h-40 object-cover rounded-lg border border-slate-800">` : ''}
+                        <a href="${order.gps_coords}" target="_blank" class="block w-full bg-slate-800 text-center text-amber-400 py-2.5 text-xs font-bold rounded-xl">📍 فتح موقع العميل على الخريطة</a>
+                        
+                        <div class="border-t border-slate-800 pt-3 space-y-2">
+                            <p class="text-xs font-bold text-slate-400">تحديث حالة المهمة للمشترك:</p>
                             <div class="grid grid-cols-3 gap-2">
-                                <button onclick="updateStatus(${order.id}, 'on_the_way')" class="bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-300 text-[10px] md:text-xs font-bold py-2 rounded-lg transition">في الطريق 🚗</button>
-                                <button onclick="updateStatus(${order.id}, 'arrived')" class="bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-300 text-[10px] md:text-xs font-bold py-2 rounded-lg transition">وصلت 📍</button>
-                                <button onclick="updateStatus(${order.id}, 'completed')" class="bg-slate-800 hover:bg-blue-600 hover:text-white text-slate-300 text-[10px] md:text-xs font-bold py-2 rounded-lg transition">اكتمل العمل ✓</button>
+                                <button onclick="toggleTimeOptions(${order.id})" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 rounded-lg transition">في الطريق 🚗</button>
+                                <button onclick="updateStatus(${order.id}, 'arrived')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2 rounded-lg transition">وصلت 📍</button>
+                                <button onclick="updateStatus(${order.id}, 'completed')" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold py-2 rounded-lg transition">اكتمل ✓</button>
+                            </div>
+                            
+                            <!-- خيارات الوقت التنازلي المخفية وتظهر عند الضغط على في الطريق -->
+                            <div id="time-options-${order.id}" class="hidden bg-slate-950/60 p-3 rounded-xl border border-blue-500/30 space-y-2 text-center animate-fadeIn">
+                                <p class="text-xs text-blue-400 font-bold">⏱️ حدد الوقت المتوقع للوصول للعميل:</p>
+                                <div class="grid grid-cols-3 gap-1.5">
+                                    <button onclick="updateStatus(${order.id}, 'on_the_way_30')" class="bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-slate-950 font-bold text-xs py-1.5 rounded-md border border-blue-500/30">30 دقيقة</button>
+                                    <button onclick="updateStatus(${order.id}, 'on_the_way_60')" class="bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-slate-950 font-bold text-xs py-1.5 rounded-md border border-blue-500/30">60 دقيقة</button>
+                                    <button onclick="updateStatus(${order.id}, 'on_the_way_90')" class="bg-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-slate-950 font-bold text-xs py-1.5 rounded-md border border-blue-500/30">90 دقيقة</button>
+                                </div>
                             </div>
                         </div>
                     `;
-
                     container.appendChild(orderCard);
                 });
+            } catch (error) { console.error(error); }
+        }
 
-            } catch (error) {
-                console.error("خطأ:", error);
-                container.innerHTML = `<div class="glass p-8 text-center rounded-2xl border border-red-500/20 text-red-400">⚠️ فشل جلب البيانات من السيرفر.</div>`;
-            }
+        function toggleTimeOptions(id) {
+            const el = document.getElementById(`time-options-${id}`);
+            el.classList.toggle('hidden');
         }
 
         async function updateStatus(orderId, newState) {
@@ -146,9 +110,7 @@
                 const { error } = await supabaseClient.from('orders').update({ status: newState }).eq('id', orderId);
                 if (error) throw error;
                 fetchActiveOrders(); 
-            } catch (error) {
-                alert("فشل التحديث في السيرفر السحابي.");
-            }
+            } catch (error) { alert("فشل التحديث."); }
         }
     </script>
 </body>

@@ -36,10 +36,12 @@
             <a href="dashboard.html" class="hover:text-amber-400 transition">لوحة العميل</a>
             <a href="tech.html" class="hover:text-amber-400 transition">لوحة الفني</a>
         </div>
+        <div>
+            <a href="pricing.html" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2 rounded-lg text-sm transition shadow-lg shadow-amber-500/20">اشترك الآن</a>
+        </div>
     </nav>
 
     <main class="container mx-auto px-6 py-16 max-w-xl" id="main-content">
-        <!-- نموذج الطلب الأصلي -->
         <div class="glass p-8 rounded-2xl border border-slate-800 space-y-6" id="request-form-container">
             <div class="text-center space-y-2">
                 <h1 class="text-2xl font-black text-slate-100">طلب فني صيانة عاجل 🔧</h1>
@@ -53,17 +55,39 @@
                         <option value="كهرباء">⚡ أعمال الكهرباء والإنارة</option>
                         <option value="سباكة">🚰 السباكة والمياه</option>
                         <option value="تكييف">❄️ التكييف والتبريد</option>
+                        <option value="نجارة">🪚 النجارة والألمنيوم</option>
+                        <option value="أجهزة منزلية">📺 صيانة الأجهزة المنزلية</option>
+                        <option value="وقاية">🛡️ وقاية موسمية</option>
                     </select>
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">وصف المشكلة بالتفصيل</label>
-                    <textarea id="problem-desc" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:border-amber-500 focus:outline-none"></textarea>
+                    <textarea id="problem-desc" rows="4" placeholder="يرجى كتابة ما تواجهه في المنزل..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:border-amber-500 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-slate-300 mb-2">موقع المنزل الجغرافي (نظام التتبع المباشر)</label>
+                    <button type="button" onclick="getLocation()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 text-sm font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2 border border-slate-700">
+                        📍 <span>اضغط هنا لتحديد موقعك الحالي GPS تلقائياً</span>
+                    </button>
+                    <p id="gps-status" class="text-xs text-slate-500 mt-2 text-center">أو سيتم استخدام العنوان اليدوي في الأسفل.</p>
+                    <input type="hidden" id="gps-coords" value="">
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-slate-300 mb-2">العنوان اليدوي بالتفصيل</label>
-                    <input type="text" id="manual-address" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:border-amber-500 focus:outline-none">
+                    <input type="text" id="manual-address" placeholder="مثال: المنصور، شارع الرواد..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:border-amber-500 focus:outline-none">
+                </div>
+
+                <div class="border border-slate-700/50 bg-slate-900/50 p-4 rounded-xl space-y-3">
+                    <label class="block text-sm font-bold text-amber-400">📷 إرفاق صورة العطل (اختياري)</label>
+                    <input type="file" id="image-file" accept="image/*" onchange="previewImage(event)" class="block w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-600 cursor-pointer">
+                    
+                    <div id="preview-container" class="hidden text-center">
+                        <img id="image-preview" src="" alt="المعاينة" class="mx-auto max-h-40 rounded-lg border border-slate-700 my-2">
+                        <p id="upload-status" class="text-xs text-slate-400">بانتظار الضغط على إرسال لرفع الصورة...</p>
+                    </div>
                 </div>
             </div>
 
@@ -73,79 +97,127 @@
         </div>
     </main>
 
-    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12 mt-auto">
-        <div class="text-center text-xs text-slate-600">
-            جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.
-        </div>
-    </footer>
-
     <script>
+        // --- إعدادات السيرفر ---
         const SUPABASE_URL = "https://nzwhrbaxhygivduwmria.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_-0A6mi2LDboRsW2MYRBb1A_I5q1Jikw"; 
+        const CLOUDINARY_CLOUD_NAME = "demo"; 
+        const CLOUDINARY_UPLOAD_PRESET = "ml_default"; 
         const whatsappPhone = "9647715480994";
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let uploadedImageUrl = "";
         let timerInterval;
 
-        // 1. عند تحميل الصفحة، نتحقق إذا كان هناك طلب نشط محفوظ في ذاكرة المتصفح
+        // 1. عند تحميل الصفحة (تفعيل ذاكرة المتصفح)
         window.onload = async () => {
             const activeOrderId = localStorage.getItem('activeOrderId');
             if (activeOrderId) {
-                // جلب الحالة الحالية من السيرفر
                 const { data, error } = await supabaseClient.from('orders').select('status').eq('id', activeOrderId).single();
                 if (data) {
                     renderUI(data.status, activeOrderId);
                     listenToOrder(activeOrderId);
                 } else {
-                    localStorage.removeItem('activeOrderId'); // تنظيف إذا تم حذف الطلب
+                    localStorage.removeItem('activeOrderId');
                 }
             }
         };
 
-        // 2. دالة إرسال الطلب الجديدة (تحفظ الطلب في ذاكرة المتصفح)
+        // 2. وظائف الموقع الجغرافي والصور
+        function getLocation() {
+            const status = document.getElementById('gps-status');
+            const coords = document.getElementById('gps-coords');
+            if (!navigator.geolocation) {
+                status.innerText = "متصفحك لا يدعم تتبع الموقع."; return;
+            }
+            status.innerText = "جاري الحصول على الموقع... ⏳";
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    coords.value = `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`;
+                    status.innerText = "✓ تم تحديد موقعك الجغرافي بنجاح!";
+                    status.className = "text-xs text-emerald-400 mt-2 text-center font-bold";
+                },
+                () => { status.innerText = "فشل تحديد الموقع."; status.className = "text-xs text-red-400 mt-2 text-center"; }
+            );
+        }
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('image-preview').src = URL.createObjectURL(file);
+                document.getElementById('preview-container').classList.remove('hidden');
+                document.getElementById('upload-status').innerText = "جاهز للرفع...";
+            }
+        }
+
+        async function uploadImage() {
+            const fileInput = document.getElementById('image-file');
+            if (fileInput.files.length === 0) return ""; 
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+            try {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+                const data = await response.json();
+                return data.secure_url;
+            } catch (error) {
+                return "";
+            }
+        }
+
+        // 3. دالة إرسال الطلب الرئيسية
         async function sendRequest() {
             const service = document.getElementById('service-type').value;
             const desc = document.getElementById('problem-desc').value;
+            const gps = document.getElementById('gps-coords').value || "لم يتم التحديد";
             const address = document.getElementById('manual-address').value;
             const submitBtn = document.getElementById('submit-btn');
 
             if(!desc || !address) {
-                alert("يرجى وصف المشكلة وتحديد العنوان.");
-                return;
+                alert("يرجى وصف المشكلة وتحديد العنوان."); return;
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerText = "جاري معالجة طلبك... ⏳";
+            submitBtn.innerText = "جاري معالجة ورفع طلبك... ⏳";
+
+            // رفع الصورة أولاً
+            uploadedImageUrl = await uploadImage();
 
             try {
+                // حفظ بقاعدة البيانات
                 const { data, error } = await supabaseClient
                     .from('orders')
-                    .insert([{ service_type: service, problem_desc: desc, manual_address: address, status: 'pending' }])
+                    .insert([{ 
+                        service_type: service, problem_desc: desc, manual_address: address, 
+                        gps_coords: gps, image_url: uploadedImageUrl, status: 'pending' 
+                    }])
                     .select();
 
                 if (error) throw error;
-                
                 const currentOrderId = data[0].id;
                 
-                // حفظ رقم الطلب في ذاكرة المتصفح (مهم جداً ليمنع ضياع الصفحة عند الرفريش)
+                // حفظ بالذاكرة لضمان عدم ضياع الصفحة عند الرفريش
                 localStorage.setItem('activeOrderId', currentOrderId);
 
-                // الانتقال لواجهة الانتظار
+                // تغيير الواجهة وبدء الاستماع
                 renderUI('pending', currentOrderId);
                 listenToOrder(currentOrderId);
 
                 // فتح الواتساب
-                const msg = encodeURIComponent(`طلب جديد رقم: ${currentOrderId}\nالخدمة: ${service}`);
+                const imageLine = uploadedImageUrl ? `• رابط الصورة: ${uploadedImageUrl}\n` : ``;
+                const msg = encodeURIComponent(`🔧 طلب رقم: ${currentOrderId}\n• الخدمة: ${service}\n• الوصف: ${desc}\n• العنوان: ${address}\n• GPS: ${gps}\n${imageLine}`);
                 window.open(`https://wa.me/${whatsappPhone}?text=${msg}`, '_blank');
 
             } catch (error) {
-                alert("حدث خطأ في الإرسال");
+                alert("حدث خطأ، يرجى المحاولة مرة أخرى.");
                 submitBtn.disabled = false;
                 submitBtn.innerText = "إرسال الطلب للإدارة 🚀";
             }
         }
 
-        // 3. دالة الاستماع للتحديثات اللحظية
+        // 4. دالة الاستماع للتحديثات اللحظية
         function listenToOrder(orderId) {
             supabaseClient
                 .channel('order-status')
@@ -157,7 +229,7 @@
                 .subscribe();
         }
 
-        // 4. دالة رسم الشاشة بناءً على الحالة الواردة
+        // 5. دالة رسم واجهة التتبع (التي لا تتأثر بالرفريش)
         function renderUI(status, orderId) {
             const mainElement = document.getElementById('main-content');
             
@@ -183,7 +255,7 @@
                 startTimer();
             }
             else if (status === 'arrived') {
-                clearInterval(timerInterval); // إيقاف العداد
+                clearInterval(timerInterval); 
                 mainElement.innerHTML = `
                     <div class="glass p-10 rounded-2xl border border-blue-500/50 text-center space-y-6">
                         <div class="text-7xl">📍👷‍♂️</div>
@@ -193,24 +265,23 @@
             }
             else if (status === 'completed') {
                 clearInterval(timerInterval);
-                localStorage.removeItem('activeOrderId'); // تنظيف الذاكرة لطلب جديد
+                localStorage.removeItem('activeOrderId'); 
                 localStorage.removeItem('timerEndTime');
                 mainElement.innerHTML = `
                     <div class="glass p-10 rounded-2xl border border-purple-500/50 text-center space-y-6">
                         <div class="text-7xl">✅🛠️</div>
                         <h2 class="text-3xl font-black text-purple-400">تم الانتهاء من العمل!</h2>
                         <p class="text-slate-300">شكراً لثقتك بنا.</p>
-                        <button onclick="location.reload()" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-8 rounded-xl transition">إرسال طلب جديد</button>
+                        <button onclick="location.reload()" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-8 rounded-xl transition mt-4">طلب خدمة جديدة</button>
                     </div>`;
             }
         }
 
-        // 5. دالة العداد الذكي (يتذكر الوقت حتى لو عملت رفريش)
+        // 6. دالة العداد الذكي
         function startTimer() {
             clearInterval(timerInterval);
             let endTime = localStorage.getItem('timerEndTime');
             
-            // إذا لم يكن هناك عداد مسبق، ننشئ واحداً ينتهي بعد 90 دقيقة
             if (!endTime) {
                 endTime = new Date().getTime() + (90 * 60 * 1000);
                 localStorage.setItem('timerEndTime', endTime);
@@ -222,7 +293,7 @@
 
                 if (distance <= 0) {
                     clearInterval(timerInterval);
-                    document.getElementById('timer-display').innerText = "00:00";
+                    if(document.getElementById('timer-display')) document.getElementById('timer-display').innerText = "00:00";
                     localStorage.removeItem('timerEndTime');
                     return;
                 }
@@ -235,7 +306,6 @@
 
                 const display = document.getElementById('timer-display');
                 if(display) display.innerText = `${minutes}:${seconds}`;
-
             }, 1000);
         }
     </script>

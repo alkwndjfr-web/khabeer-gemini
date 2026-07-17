@@ -101,9 +101,9 @@
         // ⚠️ إعدادات السيرفر السحابي السري (استبدلها ببياناتك الحقيقية)
         // ------------------------------------------------------------
         const SUPABASE_URL = "https://nzwhrbaxhygivduwmria.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_-0A6mi2LDboRsW2MYRBb1A_I5q1Jikw"; // ضع الـ anon key هنا
-        const CLOUDINARY_CLOUD_NAME = "demo"; // ضع الـ Cloud Name الخاص بك هنا
-        const CLOUDINARY_UPLOAD_PRESET = "ml_default"; // ضع الـ Upload Preset غير المشفر هنا
+        const SUPABASE_ANON_KEY = "sb_publishable_-0A6mi2LDboRsW2MYRBb1A_I5q1Jikw"; 
+        const CLOUDINARY_CLOUD_NAME = "demo"; 
+        const CLOUDINARY_UPLOAD_PRESET = "ml_default"; 
         
         const whatsappPhone = "9647715480994";
 
@@ -207,6 +207,8 @@
             // 1. رفع الصورة أولاً
             uploadedImageUrl = await uploadImage();
 
+            let currentOrderId = null; // متغير لحفظ رقم الطلب الجديد
+
             // 2. الحفظ الحقيقي في قاعدة البيانات السحابية Supabase
             try {
                 const { data, error } = await supabaseClient
@@ -220,10 +222,14 @@
                             image_url: uploadedImageUrl,
                             status: 'pending'
                         }
-                    ]);
+                    ])
+                    .select(); // 👈 طلبنا من السيرفر إعادة البيانات بعد إضافتها لمعرفة رقم الطلب!
 
                 if (error) throw error;
+                
                 console.log("تم حفظ الطلب بنجاح في قاعدة البيانات السحابية!");
+                currentOrderId = data[0].id; // استخراج رقم الطلب من الرد
+
             } catch (dbError) {
                 console.error("فشل حفظ الطلب في قاعدة البيانات:", dbError);
                 alert("حدث خطأ أثناء حفظ الطلب في السيرفر، ولكن سنتابع إرسال الواتساب.");
@@ -235,6 +241,7 @@
             const formattedMessage = encodeURIComponent(
                 `🔧 *طلب صيانة جديد - منصة خبير*\n` +
                 `────────────────────\n` +
+                `• *رقم الطلب:* ${currentOrderId || 'غير متوفر'}\n` + // أضفنا رقم الطلب هنا أيضاً
                 `• *نوع الخدمة:* ${service}\n` +
                 `• *تفاصيل العطل:* ${desc}\n` +
                 `• *العنوان اليدوي:* ${address}\n` +
@@ -244,14 +251,73 @@
                 `يرجى تأكيد إرسال الفني خلال 90 دقيقة.`
             );
 
-            submitBtn.disabled = false;
-            submitBtn.innerText = "إرسال الطلب للإدارة وتأكيد الفني 🚀";
+            // 4. تفعيل واجهة التتبع اللحظية للمستخدم إذا نجح الطلب
+            if (currentOrderId) {
+                const mainElement = document.querySelector('main');
+                
+                // تغيير محتوى الصفحة لشاشة انتظار أنيقة
+                mainElement.innerHTML = `
+                    <div class="glass p-10 rounded-2xl border border-amber-500/30 text-center space-y-6 shadow-2xl">
+                        <div class="animate-pulse mb-4 text-6xl">⏳</div>
+                        <h2 class="text-3xl font-black text-amber-400">طلبك قيد المراجعة...</h2>
+                        <p class="text-slate-300 text-lg">تم استلام طلبك (رقم: <span class="font-bold text-white">${currentOrderId}</span>).<br>يرجى البقاء في هذه الصفحة لمتابعة حالة الطلب مباشرة.</p>
+                        <p class="text-sm text-slate-500 mt-4">سيتم تحويل هذه الشاشة تلقائياً فور موافقة الفني.</p>
+                    </div>
+                `;
 
+                // تشغيل "الرادار" للاستماع لتحديثات هذا الطلب فقط
+                supabaseClient
+                    .channel('order-status-channel')
+                    .on(
+                        'postgres_changes',
+                        { 
+                            event: 'UPDATE', 
+                            schema: 'public', 
+                            table: 'orders', 
+                            filter: `id=eq.${currentOrderId}` // مراقبة طلب هذا العميل فقط
+                        },
+                        (payload) => {
+                            const newStatus = payload.new.status;
+                            
+                            // إذا غيّر الفني الحالة إلى "في الطريق"
+                            if (newStatus === 'in_progress') {
+                                mainElement.innerHTML = `
+                                    <div class="glass p-10 rounded-2xl border border-emerald-500/50 text-center space-y-6 shadow-2xl">
+                                        <div class="mb-4 text-7xl bounce" style="animation: bounce 2s infinite;">🚗</div>
+                                        <h2 class="text-3xl font-black text-emerald-400">الفني في الطريق إليك!</h2>
+                                        <p class="text-slate-300 text-lg">لقد وافق الفني على طلبك وهو يتوجه إلى موقعك حالياً.<br>يرجى إبقاء الهاتف متاحاً.</p>
+                                    </div>
+                                    <style>
+                                        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+                                    </style>
+                                `;
+                            } 
+                            // إذا غيّر الفني الحالة إلى "مكتمل"
+                            else if (newStatus === 'completed') {
+                                mainElement.innerHTML = `
+                                    <div class="glass p-10 rounded-2xl border border-blue-500/50 text-center space-y-6 shadow-2xl">
+                                        <div class="mb-4 text-7xl">✅</div>
+                                        <h2 class="text-3xl font-black text-blue-400">تم الانتهاء من العمل!</h2>
+                                        <p class="text-slate-300 text-lg">تم إغلاق هذا الطلب بنجاح. شكراً لثقتك بخدمات خبير.</p>
+                                        <button onclick="location.reload()" class="mt-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-xl transition">طلب خدمة جديدة</button>
+                                    </div>
+                                `;
+                            }
+                        }
+                    )
+                    .subscribe();
+            } else {
+                // إذا فشل الاتصال بقاعدة البيانات نعيد زر الإرسال للعمل
+                submitBtn.disabled = false;
+                submitBtn.innerText = "إرسال الطلب للإدارة وتأكيد الفني 🚀";
+            }
+
+            // فتح الواتساب في النهاية
             window.open(`https://wa.me/${whatsappPhone}?text=${formattedMessage}`, '_blank');
         }
     </script>
 
-    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12">
+    <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm py-12 mt-auto">
         <div class="text-center text-xs text-slate-600">
             جميع الحقوق محفوظة © 2026 خبير لصيانة المنازل.
         </div>
